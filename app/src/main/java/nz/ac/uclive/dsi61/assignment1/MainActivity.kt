@@ -2,8 +2,10 @@ package nz.ac.uclive.dsi61.assignment1
 
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -16,6 +18,8 @@ import androidx.compose.ui.unit.dp
 import nz.ac.uclive.dsi61.assignment1.ui.theme.Assignment1Theme
 import java.time.LocalDate
 import androidx.compose.foundation.lazy.items
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 
 class MainActivity : ComponentActivity() {
 
@@ -54,7 +58,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    MusicList(musicEntries)
+
+                    MusicList(musicEntries, onMusicEntryClick = { music ->
+                        Toast.makeText(this, music.musicName, Toast.LENGTH_LONG).show()
+                    })
                 }
             }
         }
@@ -64,13 +71,17 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-fun MusicList(musics: Array<MusicEntry>) {
-    musics.sort()
+fun MusicList(musics: Array<MusicEntry>, onMusicEntryClick: (MusicEntry) -> Unit) {
+    musics.sort() // https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/sort.html
     LazyColumn {
         items(musics) { music ->
             // Styling for an individual item in the list
             Text(
-                modifier = Modifier.padding(all=40.dp),
+                modifier = Modifier
+                    .padding(all=40.dp)
+                    .clickable {
+                        onMusicEntryClick(music)
+                    },
                 style = MaterialTheme.typography.body1,
                 text = music.musicName + "\n" + music.artistName,
             )

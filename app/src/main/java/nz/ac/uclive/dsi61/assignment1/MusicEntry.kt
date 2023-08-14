@@ -11,6 +11,7 @@ class MusicEntry(val musicName: String,
                  val notes: String?) : Comparable<MusicEntry> {
     override fun toString() = musicName
 
+    // https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/sort.html
     override fun compareTo(other: MusicEntry): Int
         = this.musicName.compareTo(other.musicName)
 
