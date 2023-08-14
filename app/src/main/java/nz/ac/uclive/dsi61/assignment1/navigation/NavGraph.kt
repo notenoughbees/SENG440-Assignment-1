@@ -1,5 +1,6 @@
 package nz.ac.uclive.dsi61.assignment1.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -20,9 +21,14 @@ fun NavGraph (navController: NavHostController) {
         composable(route = Screens.MyCollection.route) {
             MyCollectionScreen(navController)
         }
-        composable(route = Screens.Settings.route) {
-            val argument = "1"
-            SettingsScreen(navController, argument)
+        composable(
+            route = Screens.Settings.route,
+            arguments = listOf(navArgument("id") {
+                type = NavType.IntType
+            })
+        ) {
+            Log.d("Args", it.arguments?.getInt("id").toString())
+            SettingsScreen(navController)
         }
     }
 }

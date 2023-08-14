@@ -19,8 +19,7 @@ import androidx.navigation.NavController
 
 @Composable
 fun SettingsScreen(
-    navController: NavController,
-    musicEntryId: String? = "1",  //TODO
+    navController: NavController
     ) {
     Column(
         modifier = Modifier
@@ -35,7 +34,7 @@ fun SettingsScreen(
             horizontalArrangement = Arrangement.Center
         ){
             Text(
-                text = "Settings Screen $musicEntryId",
+                text = "Settings Screen",
                 fontSize = MaterialTheme.typography.h3.fontSize,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colors.secondary
