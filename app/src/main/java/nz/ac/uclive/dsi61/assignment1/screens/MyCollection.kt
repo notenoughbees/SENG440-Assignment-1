@@ -48,11 +48,10 @@ fun MyCollectionScreen(navController: NavController) {
     MusicList(musicEntries, onMusicEntryClick = { music ->
 //        Toast.makeText(this, music.musicName, Toast.LENGTH_LONG).show()
 //        selectedMusicEntry = music
-        navController.navigate(Screens.Settings.passId(musicEntries.indexOf(music)))
+        navController.navigate(Screens.ViewMusicEntry.passId(musicEntries.indexOf(music)))
     })
 
 }
-
 
 
 @Composable

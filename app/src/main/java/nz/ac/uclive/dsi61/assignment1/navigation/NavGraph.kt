@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import nz.ac.uclive.dsi61.assignment1.screens.MyCollectionScreen
-import nz.ac.uclive.dsi61.assignment1.screens.SettingsScreen
+import nz.ac.uclive.dsi61.assignment1.screens.ViewMusicEntryScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
@@ -22,13 +22,13 @@ fun NavGraph (navController: NavHostController) {
             MyCollectionScreen(navController)
         }
         composable(
-            route = Screens.Settings.route,
+            route = Screens.ViewMusicEntry.route,
             arguments = listOf(navArgument("id") {
                 type = NavType.IntType
             })
         ) {
             Log.d("Args", it.arguments?.getInt("id").toString())
-            SettingsScreen(navController)
+            ViewMusicEntryScreen(navController)
         }
     }
 }

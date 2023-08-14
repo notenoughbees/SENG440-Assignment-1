@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 @Composable
-fun SettingsScreen(
+fun ViewMusicEntryScreen(
     navController: NavController
     ) {
     Column(
@@ -34,7 +34,7 @@ fun SettingsScreen(
             horizontalArrangement = Arrangement.Center
         ){
             Text(
-                text = "Settings Screen",
+                text = "View Music Entry",
                 fontSize = MaterialTheme.typography.h3.fontSize,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colors.secondary
