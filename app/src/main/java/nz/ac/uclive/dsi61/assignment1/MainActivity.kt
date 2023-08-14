@@ -19,7 +19,7 @@ import androidx.compose.foundation.lazy.items
 
 class MainActivity : ComponentActivity() {
 
-    private val musicEntries = listOf<MusicEntry>(
+    private val musicEntries = arrayOf<MusicEntry>(
         MusicEntry("Folie à Deux", "Fall Out Boy", "CD", "Album",  LocalDate.of(2022, 9, 30), 5f, "Jewel case"),
         MusicEntry("Hesitant Alien", "Gerard Way", "CD", "Album",  LocalDate.of(2022, 11, 16), 15f, "Comes with poster"),
         MusicEntry("Midnights", "Taylor Swift", "CD", "Album",  LocalDate.of(2022, 11, 16), 19.99f, "Bought new :)"),
@@ -64,17 +64,19 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-fun MusicList(musics: List<MusicEntry>) {
+fun MusicList(musics: Array<MusicEntry>) {
+    musics.sort()
     LazyColumn {
         items(musics) { music ->
             // Styling for an individual item in the list
             Text(
                 modifier = Modifier.padding(all=40.dp),
                 style = MaterialTheme.typography.body1,
-                text = music.musicName,
+                text = music.musicName + "\n" + music.artistName,
             )
         }
     }
 }
+
 
 

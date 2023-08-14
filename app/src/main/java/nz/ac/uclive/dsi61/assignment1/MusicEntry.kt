@@ -8,7 +8,10 @@ class MusicEntry(val musicName: String,
                  val musicType: String?,
                  val dateObtained: LocalDate?,
                  val pricePaid: Float?,
-                 val notes: String?) {
+                 val notes: String?) : Comparable<MusicEntry> {
     override fun toString() = musicName
+
+    override fun compareTo(other: MusicEntry): Int
+        = this.musicName.compareTo(other.musicName)
 
 }
