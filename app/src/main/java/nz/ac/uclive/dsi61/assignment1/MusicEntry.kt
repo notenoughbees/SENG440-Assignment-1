@@ -14,13 +14,13 @@ private val sampleData = mutableListOf<MusicEntry>(
     MusicEntry(3, "Midnights", "Taylor Swift", "CD", "Album",  LocalDate.of(2022, 11, 16), 19.99f, "Bought new :)"),
     MusicEntry(4, "Cotton Eye Joe", "Rednex", "CD", "Single",  LocalDate.of(2022, 11, 16), 0.25f, ""),
     MusicEntry(5, "Fantasies & Delusions", "Billy Joel", "CD", "Album",  LocalDate.of(2023, 8, 10), 1.95f, ""),
-//    MusicEntry("California Flash", "Billy Joel", "Vinyl", "Compilation",  null, null, ""),
-//    MusicEntry("Flaunt It", "Sigue Sigue Sputnik", "Vinyl", "Album",  null, null, ""),
-//    MusicEntry("Greatest Hits Vol. 2", "ABBA", "Vinyl", "Album",  null, null,  ""),
-//    MusicEntry("Creep", "Radiohead", "Vinyl", "Single",  null, null,  "Jukebox. No sleeve"),
-//    MusicEntry("The Exponents", "The Exponents", "Tape", "Album",  null, null,  ""),
-//    MusicEntry("Human Racing", "Nik Kershaw", "Tape", "Album",  null, null,  ""),
-//    MusicEntry("Careless Whisper", "George Michael", "Vinyl", "Single",  null, null,  "Australian Promo version"),
+//    MusicEntry(6, "California Flash", "Billy Joel", "Vinyl", "Compilation",  null, null, ""),
+//    MusicEntry(7, "Flaunt It", "Sigue Sigue Sputnik", "Vinyl", "Album",  null, null, ""),
+//    MusicEntry(8, "Greatest Hits Vol. 2", "ABBA", "Vinyl", "Album",  null, null,  ""),
+//    MusicEntry(9, "Creep", "Radiohead", "Vinyl", "Single",  null, null,  "Jukebox. No sleeve"),
+//    MusicEntry(10, "The Exponents", "The Exponents", "Tape", "Album",  null, null,  ""),
+//    MusicEntry(11, "Human Racing", "Nik Kershaw", "Tape", "Album",  null, null,  ""),
+//    MusicEntry(12, "Careless Whisper", "George Michael", "Vinyl", "Single",  null, null,  "Australian Promo version"),
     //TODO: handle null values
 )
 
@@ -41,7 +41,7 @@ class MusicEntry(val id: Int,
 
     companion object {
         /**
-         * Reads a JSON file
+         * Reads a JSON file consisting of a single JSON array.
          */
         fun readArrayFromFile(context: Context): MutableList<MusicEntry> {
             var musicEntries = mutableListOf<MusicEntry>()
@@ -70,12 +70,11 @@ class MusicEntry(val id: Int,
                 writer.endArray()
                 writer.close()
             }
-
             return musicEntries
         }
 
         /**
-         * Reads a JSON array (within two []s)
+         * Reads a JSON array.
          */
         fun readArray(reader: JsonReader) : MutableList<MusicEntry> {
             val musicEntries = mutableListOf<MusicEntry>()
@@ -87,13 +86,12 @@ class MusicEntry(val id: Int,
             }
             reader.endArray()
 //            reader.close()
-
             return musicEntries
         }
 
 
         /**
-         * Reads one JSON object (within two {}s)
+         * Reads a single JSON object.
          */
         fun read(reader: JsonReader) : MusicEntry {
             var id: Int = -1
@@ -121,11 +119,13 @@ class MusicEntry(val id: Int,
             }
             reader.endObject()
 //            reader.close()
-
             return MusicEntry(id, musicName, artistName, musicFormat, musicType, dateObtained, pricePaid, notes)
         }
 
 
+        /**
+         * Reads a single JSON object with the given ID value.
+         */
         fun readAtIndex(reader: JsonReader, index: Int) : MusicEntry {
             reader.beginArray()
 
@@ -150,12 +150,14 @@ class MusicEntry(val id: Int,
 
             reader.endArray()
 //            reader.close()
-
             return musicEntry
         }
     }
 
 
+    /**
+     * Writes a single JSON object.
+     */
     fun write(writer: JsonWriter) {
         writer.beginObject()
         writer.name("id").value(id)

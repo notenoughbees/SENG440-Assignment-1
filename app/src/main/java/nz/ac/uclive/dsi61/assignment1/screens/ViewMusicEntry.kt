@@ -25,12 +25,12 @@ import java.io.InputStreamReader
 @Composable
 fun ViewMusicEntryScreen(context: Context,
                          navController: NavController,
-                         musicEntryId: Int //TODO
+                         musicEntryId: Int
                          ) {
 
     println("ViewMusicEntryScreen")
-    val file = context.openFileInput("music.json")      //TODO 16/08
-    val reader = JsonReader(InputStreamReader(file))    //TODO 16/08
+    val file = context.openFileInput("music.json")
+    val reader = JsonReader(InputStreamReader(file))
 
     Column(
         modifier = Modifier
@@ -45,7 +45,7 @@ fun ViewMusicEntryScreen(context: Context,
             horizontalArrangement = Arrangement.Center
         ){
             Text(
-                text = "${MusicEntry.readAtIndex(reader, musicEntryId)}",  //TODO 16/8
+                text = "${MusicEntry.readAtIndex(reader, musicEntryId)}",
                 fontSize = MaterialTheme.typography.h3.fontSize,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colors.secondary
