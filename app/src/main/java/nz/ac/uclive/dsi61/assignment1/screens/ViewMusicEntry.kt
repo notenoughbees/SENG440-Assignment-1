@@ -32,7 +32,6 @@ fun ViewMusicEntryScreen(context: Context,
     val file = context.openFileInput("music.json")      //TODO 16/08
     val reader = JsonReader(InputStreamReader(file))    //TODO 16/08
 
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -46,8 +45,7 @@ fun ViewMusicEntryScreen(context: Context,
             horizontalArrangement = Arrangement.Center
         ){
             Text(
-                text = "${MusicEntry.readAtIndex(reader, 5)}",  //TODO 16/8
-//                text = "",
+                text = "${MusicEntry.readAtIndex(reader, musicEntryId)}",  //TODO 16/8
                 fontSize = MaterialTheme.typography.h3.fontSize,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colors.secondary

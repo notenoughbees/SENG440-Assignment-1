@@ -9,11 +9,11 @@ import java.io.OutputStreamWriter
 import java.time.LocalDate
 
 private val sampleData = mutableListOf<MusicEntry>(
-    MusicEntry("Folie à Deux", "Fall Out Boy", "CD", "Album",  LocalDate.of(2022, 9, 30), 5f, "Jewel case"),
-    MusicEntry("Hesitant Alien", "Gerard Way", "CD", "Album",  LocalDate.of(2022, 11, 16), 15f, "Comes with poster"),
-    MusicEntry("Midnights", "Taylor Swift", "CD", "Album",  LocalDate.of(2022, 11, 16), 19.99f, "Bought new :)"),
-    MusicEntry("Cotton Eye Joe", "Rednex", "CD", "Single",  LocalDate.of(2022, 11, 16), 0.25f, ""),
-    MusicEntry("Fantasies & Delusions", "Billy Joel", "CD", "Album",  LocalDate.of(2023, 8, 10), 1.95f, ""),
+    MusicEntry(1, "Folie à Deux", "Fall Out Boy", "CD", "Album",  LocalDate.of(2022, 9, 30), 5f, "Jewel case"),
+    MusicEntry(2, "Hesitant Alien", "Gerard Way", "CD", "Album",  LocalDate.of(2022, 11, 16), 15f, "Comes with poster"),
+    MusicEntry(3, "Midnights", "Taylor Swift", "CD", "Album",  LocalDate.of(2022, 11, 16), 19.99f, "Bought new :)"),
+    MusicEntry(4, "Cotton Eye Joe", "Rednex", "CD", "Single",  LocalDate.of(2022, 11, 16), 0.25f, ""),
+    MusicEntry(5, "Fantasies & Delusions", "Billy Joel", "CD", "Album",  LocalDate.of(2023, 8, 10), 1.95f, ""),
 //    MusicEntry("California Flash", "Billy Joel", "Vinyl", "Compilation",  null, null, ""),
 //    MusicEntry("Flaunt It", "Sigue Sigue Sputnik", "Vinyl", "Album",  null, null, ""),
 //    MusicEntry("Greatest Hits Vol. 2", "ABBA", "Vinyl", "Album",  null, null,  ""),
@@ -25,7 +25,8 @@ private val sampleData = mutableListOf<MusicEntry>(
 )
 
 
-class MusicEntry(val musicName: String,
+class MusicEntry(val id: Int,
+                 val musicName: String,
                  val artistName: String,
                  val musicFormat: String?,
                  val musicType: String?,
@@ -77,15 +78,7 @@ class MusicEntry(val musicName: String,
          * Reads a JSON array (within two []s)
          */
         fun readArray(reader: JsonReader) : MutableList<MusicEntry> {
-            lateinit var musicName: String // lateinit here, then initialise in the when statement
-            lateinit var artistName: String
-            var musicFormat: String? = null // lateinit not needed on nullable types since we just init to null
-            var musicType: String? = null
-            var dateObtained: LocalDate? = null
-            var pricePaid: Float? = null
-            var notes: String? = null
-
-            var musicEntries = mutableListOf<MusicEntry>()
+            val musicEntries = mutableListOf<MusicEntry>()
 
             reader.beginArray()
             while (reader.hasNext()) {
@@ -103,6 +96,7 @@ class MusicEntry(val musicName: String,
          * Reads one JSON object (within two {}s)
          */
         fun read(reader: JsonReader) : MusicEntry {
+            var id: Int = -1
             lateinit var musicName: String // lateinit here, then initialise in the when statement
             lateinit var artistName: String
             var musicFormat: String? = null // lateinit not needed on nullable types since we just init to null
@@ -115,6 +109,7 @@ class MusicEntry(val musicName: String,
             while (reader.hasNext()) {
                 val jsonKey = reader.nextName()
                 when (jsonKey) {
+                    "id" -> id = reader.nextInt()
                     "musicName" -> musicName = reader.nextString()
                     "artistName" -> artistName = reader.nextString()
                     "musicFormat" -> musicFormat = reader.nextString()
@@ -127,20 +122,32 @@ class MusicEntry(val musicName: String,
             reader.endObject()
 //            reader.close()
 
-            return MusicEntry(musicName, artistName, musicFormat, musicType, dateObtained, pricePaid, notes)
+            return MusicEntry(id, musicName, artistName, musicFormat, musicType, dateObtained, pricePaid, notes)
         }
 
 
         fun readAtIndex(reader: JsonReader, index: Int) : MusicEntry {
-
             reader.beginArray()
 
             // skip elements until we get to the element we want to read
-            for(i in 0 until index) {
-                reader.skipValue()
+            for(i in 1 until index) {
+                println("i: ${i}")
+                // start reading a new object
+                reader.beginObject()
+                while (reader.hasNext()) {
+                    // skip all values in the object
+                    reader.skipValue()
+                }
+                reader.endObject()
             }
 
             val musicEntry = read(reader)
+
+            // now skip reading all other objects in the rest of the file (and then the end of the array)
+            while (reader.hasNext()) {
+                reader.skipValue()
+            }
+
             reader.endArray()
 //            reader.close()
 
@@ -151,11 +158,11 @@ class MusicEntry(val musicName: String,
 
     fun write(writer: JsonWriter) {
         writer.beginObject()
+        writer.name("id").value(id)
         writer.name("musicName").value(musicName)
         writer.name("artistName").value(artistName)
         writer.name("musicFormat").value(musicFormat)
         writer.name("musicType").value(musicType)
-//        writer.name("dateObtained").value(dateObtained.toString())
         writer.name("dateObtained").value(if (dateObtained.toString() != "null") dateObtained.toString() else null)
         writer.name("pricePaid").value(pricePaid)
         writer.name("notes").value(notes)

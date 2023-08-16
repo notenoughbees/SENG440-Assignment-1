@@ -34,7 +34,6 @@ fun NavGraph (navController: NavHostController) {
 //        }
         // TODO
         ) { backStackEntry ->
-                println("NavGraph 30")
             // https://developer.android.com/jetpack/compose/navigation#nav-with-args
                 val musicEntryId = backStackEntry.arguments?.getInt("id") ?: -1
                 Log.d("Args", backStackEntry.arguments?.getInt("id").toString())
