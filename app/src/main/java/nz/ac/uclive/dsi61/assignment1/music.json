@@ -1,0 +1,119 @@
+[
+  {
+    "title": "Folie à Deux",
+    "artist": "Fall Out Boy",
+    "format": "CD",
+    "type": "Album",
+    "releaseDate": "2022-09-30",
+    "price": 5.0,
+    "notes": "Jewel case"
+  },
+  {
+    "title": "Hesitant Alien",
+    "artist": "Gerard Way",
+    "format": "CD",
+    "type": "Album",
+    "releaseDate": "2022-11-16",
+    "price": 15.0,
+    "notes": "Comes with poster"
+  },
+  {
+    "title": "Midnights",
+    "artist": "Taylor Swift",
+    "format": "CD",
+    "type": "Album",
+    "releaseDate": "2022-11-16",
+    "price": 19.99,
+    "notes": "Bought new :)"
+  },
+  {
+    "title": "Cotton Eye Joe",
+    "artist": "Rednex",
+    "format": "CD",
+    "type": "Single",
+    "releaseDate": "2022-11-16",
+    "price": 0.25,
+    "notes": ""
+  },
+  {
+    "title": "Fantasies & Delusions",
+    "artist": "Billy Joel",
+    "format": "CD",
+    "type": "Album",
+    "releaseDate": "2023-08-10",
+    "price": 1.95,
+    "notes": ""
+  },
+  {
+    "title": "California Flash",
+    "artist": "Billy Joel",
+    "format": "Vinyl",
+    "type": "Compilation",
+    "releaseDate": null,
+    "price": null,
+    "notes": ""
+  },
+  {
+    "title": "Flaunt It",
+    "artist": "Sigue Sigue Sputnik",
+    "format": "Vinyl",
+    "type": "Album",
+    "releaseDate": null,
+    "price": null,
+    "notes": ""
+  },
+  {
+    "title": "Greatest Hits Vol. 2",
+    "artist": "ABBA",
+    "format": "Vinyl",
+    "type": "Album",
+    "releaseDate": null,
+    "price": null,
+    "notes": ""
+  },
+  {
+    "title": "Creep",
+    "artist": "Radiohead",
+    "format": "Vinyl",
+    "type": "Single",
+    "releaseDate": null,
+    "price": null,
+    "notes": "Jukebox. No sleeve"
+  },
+  {
+    "title": "The Exponents",
+    "artist": "The Exponents",
+    "format": "Tape",
+    "type": "Album",
+    "releaseDate": null,
+    "price": null,
+    "notes": ""
+  },
+  {
+    "title": "Human Racing",
+    "artist": "Nik Kershaw",
+    "format": "Tape",
+    "type": "Album",
+    "releaseDate": null,
+    "price": null,
+    "notes": ""
+  },
+  {
+    "title": "Careless Whisper",
+    "artist": "George Michael",
+    "format": "Vinyl",
+    "type": "Single",
+    "releaseDate": null,
+    "price": null,
+    "notes": "Australian Promo version"
+  },
+  {
+    "title": "Bulletproof",
+    "artist": "La Roux",
+    "format": "CD",
+    "type": "Single",
+    "releaseDate": "2022-01-01",
+    "price": null,
+    "notes": ""
+  }
+]

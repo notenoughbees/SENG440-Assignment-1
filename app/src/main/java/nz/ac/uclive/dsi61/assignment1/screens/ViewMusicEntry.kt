@@ -1,5 +1,7 @@
 package nz.ac.uclive.dsi61.assignment1.screens
 
+import android.content.Context
+import android.util.JsonReader
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,11 +18,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import nz.ac.uclive.dsi61.assignment1.MusicEntry
+import java.io.InputStreamReader
+
 
 @Composable
-fun ViewMusicEntryScreen(
-    navController: NavController
-    ) {
+fun ViewMusicEntryScreen(context: Context,
+                         navController: NavController,
+                         musicEntryId: Int //TODO
+                         ) {
+
+    println("ViewMusicEntryScreen")
+    val file = context.openFileInput("music.json")      //TODO 16/08
+    val reader = JsonReader(InputStreamReader(file))    //TODO 16/08
+
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -34,7 +46,8 @@ fun ViewMusicEntryScreen(
             horizontalArrangement = Arrangement.Center
         ){
             Text(
-                text = "View Music Entry",
+                text = "${MusicEntry.readAtIndex(reader, 5)}",  //TODO 16/8
+//                text = "",
                 fontSize = MaterialTheme.typography.h3.fontSize,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colors.secondary
