@@ -15,7 +15,7 @@ private val sampleData = mutableListOf<MusicEntry>(
     MusicEntry(3, "Midnights", "Taylor Swift", "CD", "Album",  LocalDate.of(2022, 11, 16), 19.99f, "Bought new :)"),
     MusicEntry(4, "Cotton Eye Joe", "Rednex", "CD", "Single",  LocalDate.of(2022, 11, 16), 0.25f, ""),
     MusicEntry(5, "Fantasies & Delusions", "Billy Joel", "CD", "Album",  LocalDate.of(2023, 8, 10), 1.95f, ""),
-    MusicEntry(6, "California Flash", "Billy Joel", "Vinyl", "Compilation",  null, null, ""),
+    MusicEntry(6, "California Flash", "Billy Joel", "Vinyl", "Compilation",  LocalDate.of(1985, 1, 1), 19.85f, "this is in my mum's collection, she says this record really disappointed her because this is billy's early stuff where he did thrash metal and she doesn't like that. it turns out though that this record is rare because it was only ever released in new zealand, unlike his other records. i hope this description is long enough now"),
     MusicEntry(7, "Flaunt It", "Sigue Sigue Sputnik", "Vinyl", "Album",  null, null, ""),
     MusicEntry(8, "Greatest Hits Vol. 2", "ABBA", "Vinyl", "Album",  null, null,  ""),
     MusicEntry(9, "Creep", "Radiohead", "Vinyl", "Single",  null, null,  "Jukebox. No sleeve"),

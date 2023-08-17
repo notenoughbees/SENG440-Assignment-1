@@ -1,7 +1,9 @@
 package nz.ac.uclive.dsi61.assignment1.screens
 
 import android.annotation.SuppressLint
+import android.app.SearchManager
 import android.content.Context
+import android.content.Intent
 import android.media.AudioManager
 import android.media.ToneGenerator
 import android.util.JsonReader
@@ -47,7 +49,7 @@ fun ViewMusicEntryScreen(context: Context,
 
     Scaffold(
         topBar = {
-            TopAppBar (
+            TopAppBar(
                 title = {
                     Text(musicEntry.musicName)
                 }
@@ -62,11 +64,12 @@ fun ViewMusicEntryScreen(context: Context,
 //            horizontalAlignment = Alignment.Start
         ) {
             // artist name; search button
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp),
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
 //                horizontalArrangement = Arrangement.Start
-            ){
+            ) {
                 Column(
                     horizontalAlignment = Alignment.Start
                 ) {
@@ -77,13 +80,17 @@ fun ViewMusicEntryScreen(context: Context,
                         color = MaterialTheme.colors.primary
                     )
                 }
-                Column( // must wrap the button in a column so that we can apply horizontalAlignment
+                Column(
+                    // must wrap the button in a column so that we can apply horizontalAlignment
                     horizontalAlignment = Alignment.End, // push button to corner of screen
                 ) {
                     SoundButton(
                         label = "🔎",
-                        ) {
-                        val toner = ToneGenerator(AudioManager.STREAM_ALARM, ToneGenerator.MAX_VOLUME)
+                        musicEntry,
+                        context
+                    ) {
+                        val toner =
+                            ToneGenerator(AudioManager.STREAM_ALARM, ToneGenerator.MAX_VOLUME)
                         val dotTime = 200
                         toner.startTone(ToneGenerator.TONE_SUP_DIAL, dotTime)
                     }
@@ -92,27 +99,30 @@ fun ViewMusicEntryScreen(context: Context,
             }
 
             // music format
-            Row(modifier = Modifier
+            Row(
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(10.dp),
             ) {
                 Text(
                     text = stringResource(R.string.musicEntryFormat) + ": " +
-                            (musicEntry.musicFormat ?: stringResource(R.string.musicEntryValueNotGiven)), // elvis expression
+                            (musicEntry.musicFormat
+                                ?: stringResource(R.string.musicEntryValueNotGiven)), // elvis expression
                     fontSize = MaterialTheme.typography.body2.fontSize,
                     fontWeight = MaterialTheme.typography.body2.fontWeight,
                     color = MaterialTheme.colors.secondary
                 )
             }
             // music type
-            println("musicEntry.musicType: " + musicEntry.musicType)
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp),
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
             ) {
                 Text(
                     text = stringResource(R.string.musicEntryType) + ": " +
-                            (musicEntry.musicType ?: stringResource(R.string.musicEntryValueNotGiven)),
+                            (musicEntry.musicType
+                                ?: stringResource(R.string.musicEntryValueNotGiven)),
                     fontSize = MaterialTheme.typography.body2.fontSize,
                     fontWeight = MaterialTheme.typography.body2.fontWeight,
                     color = MaterialTheme.colors.secondary
@@ -120,26 +130,30 @@ fun ViewMusicEntryScreen(context: Context,
             }
 
             // date got
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp),
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
             ) {
                 Text(
                     text = stringResource(R.string.musicEntryDateObtained) + ": " +
-                            (musicEntry.dateObtained ?: stringResource(R.string.musicEntryValueNotGiven)),
+                            (musicEntry.dateObtained
+                                ?: stringResource(R.string.musicEntryValueNotGiven)),
                     fontSize = MaterialTheme.typography.body2.fontSize,
                     fontWeight = MaterialTheme.typography.body2.fontWeight,
                     color = MaterialTheme.colors.secondary
                 )
             }
             // price paid
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp),
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
             ) {
                 Text(
                     text = stringResource(R.string.musicEntryPricePaid) + ": " +
-                            (musicEntry.pricePaid ?: stringResource(R.string.musicEntryValueNotGiven)),
+                            (musicEntry.pricePaid
+                                ?: stringResource(R.string.musicEntryValueNotGiven)),
                     fontSize = MaterialTheme.typography.body2.fontSize,
                     fontWeight = MaterialTheme.typography.body2.fontWeight,
                     color = MaterialTheme.colors.secondary
@@ -147,9 +161,10 @@ fun ViewMusicEntryScreen(context: Context,
             }
 
             // extra notes
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp),
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
             ) {
                 Text(
                     text = stringResource(R.string.musicEntryExtraNotes) + ": " +
@@ -165,17 +180,57 @@ fun ViewMusicEntryScreen(context: Context,
 
 }
 
-@Composable
-fun SoundButton(label: String, onClick: () -> Unit) {
-    Button(
-        modifier = Modifier
-            .width(64.dp)
-            .height(64.dp)
-            .aspectRatio(1f), // 1:1 aspect ratio: square button
-        onClick = onClick,
-    ) {
-        Text(
-            text = label,
-        )
+    @Composable
+    fun SoundButton(label: String, musicEntry: MusicEntry, context: Context, onClick: () -> Unit) {
+        Button(
+            modifier = Modifier
+                .width(50.dp)
+                .height(50.dp)
+                .aspectRatio(1f), // 1:1 aspect ratio: square button
+            onClick = {
+            dispatchAction("Browser", musicEntry, context)
+        }
+        ) {
+            Text(
+                text = label,
+            )
+        }
+    }
+
+
+private fun dispatchAction(option: String, musicEntry: MusicEntry, context: Context): Unit {
+    when (option) {
+        // https://developer.android.com/reference/android/content/Intent#ACTION_WEB_SEARCH
+        "Browser" -> {
+            val intent = Intent(Intent.ACTION_WEB_SEARCH)
+            intent.putExtra(SearchManager.QUERY, musicEntry.artistName + " " + musicEntry.musicName)
+            context.startActivity(intent)
+        }
+//        "Map" -> {
+//            val uri = Uri.parse("geo:0,0?q=${URLEncoder.encode(friend.home, "UTF-8")}")
+//            val intent = Intent(Intent.ACTION_VIEW, uri)
+//            startActivity(intent)
+//        }
+//        "Email" -> {
+//            val intent = Intent(Intent.ACTION_SEND)
+//            intent.type = "text/plain"
+//            intent.putExtra(Intent.EXTRA_EMAIL, friend.email)
+//            startActivity(intent)
+//        }
+//        "Text" -> {
+//            val uri = Uri.parse("smsto:${friend.phone}")
+//            val intent = Intent(Intent.ACTION_SEND, uri)
+//            startActivity(intent)
+//        }
+//        "Call" -> {
+//            val uri = Uri.parse("tel:${friend.phone}")
+//            val intent = Intent(Intent.ACTION_DIAL, uri)
+//            startActivity(intent)
+//        }
+//        "Slack" -> {
+//            val uri = Uri.parse("slack://user?team=TR8N4694&id=${friend.slackId}")
+//            val intent = Intent(Intent.ACTION_VIEW, uri)
+//            startActivity(intent)
+//        }
     }
 }
