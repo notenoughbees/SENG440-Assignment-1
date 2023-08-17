@@ -97,7 +97,6 @@ fun ViewMusicEntryScreen(context: Context,
                     .padding(10.dp),
             ) {
                 Text(
-//                    text = musicEntry.musicFormat ?: "-", // elvis expression
                     text = stringResource(R.string.musicEntryFormat) + ": " +
                             (musicEntry.musicFormat ?: "-"), // elvis expression
                     fontSize = MaterialTheme.typography.body2.fontSize,
@@ -112,9 +111,6 @@ fun ViewMusicEntryScreen(context: Context,
                 .padding(10.dp),
             ) {
                 Text(
-//                    text = musicEntry.musicType ?: "-", // elvis expression
-//                    text = ("Type: " + musicEntry.musicType) ?: "Type: -",
-//                    text = stringResource(R.string.musicEntryType) + ": ${musicEntry.musicType}",
                     text = stringResource(R.string.musicEntryType) + ": " +
                             (musicEntry.musicType ?: "-"),
                     fontSize = MaterialTheme.typography.body2.fontSize,

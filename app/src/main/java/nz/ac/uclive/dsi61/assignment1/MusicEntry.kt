@@ -91,20 +91,6 @@ class MusicEntry(val id: Int,
             return musicEntries
         }
 
-
-        fun parseNullableDate(reader: JsonReader): LocalDate? {
-//            val parsedValue: LocalDate?
-            if (reader.peek() == JsonToken.NULL) {
-                reader.nextNull()
-//                parsedValue = null
-                return null
-            } else {
-//                parsedValue = LocalDate.parse(reader.nextString())
-                return LocalDate.parse(reader.nextString())
-            }
-//            return parsedValue
-        }
-
         /**
          * Reads a single JSON value which could be null.
          * Returns the value if it exists, else null.
@@ -137,35 +123,12 @@ class MusicEntry(val id: Int,
             while (reader.hasNext()) {
 
                 val jsonKey = reader.nextName()
-//                val jsonKey: String
-//                if(reader.peek() == JsonToken.NULL) {
-//                    jsonKey = reader.nextNull()
-//                } else {
-//                    jsonKey = reader.nextName()
-//                }
-                val parsedMusicFormat: String?
                 when (jsonKey) {
                     "id" -> id = reader.nextInt()
                     "musicName" -> musicName = reader.nextString()
                     "artistName" -> artistName = reader.nextString()
-
-//                    "musicFormat" -> musicFormat = reader.nextString()
-                    "musicFormat" -> {
-//                        if (reader.peek() == JsonToken.NULL) {
-//                            reader.nextNull()
-//                            parsedMusicFormat = null
-//                        } else {
-//                            parsedMusicFormat = reader.nextString()
-//                        }
-//                        musicFormat = parsedMusicFormat
-                        musicFormat = parseNullableValue(reader)
-                    }
-
+                    "musicFormat" -> musicFormat = parseNullableValue(reader)
                     "musicType" -> musicType = parseNullableValue(reader)
-//                    "dateObtained" -> dateObtained = LocalDate.parse(parseNullableValue(reader)) // TODO: works if date is not null
-//                    "dateObtained" -> dateObtained =
-//                        if(parseNullableDate(reader) != null) parseNullableDate(reader)
-//                        else null
                     "dateObtained" -> {
                         if (reader.peek() == JsonToken.NULL) {
                             reader.nextNull()
