@@ -25,7 +25,9 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.List
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,11 +44,11 @@ import nz.ac.uclive.dsi61.assignment1.navigation.Screens
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun ViewMusicEntryScreen(context: Context,
+fun EditMusicEntryScreen(context: Context,
                          navController: NavController,
                          musicEntryId: Int
-                         ) {
-    println("ViewMusicEntryScreen")
+) {
+    println("EditMusicEntryScreen")
     val fileName = context.resources.getString(R.string.file)
     val file = context.openFileInput(fileName)
     val reader = JsonReader(InputStreamReader(file))
@@ -58,9 +60,9 @@ fun ViewMusicEntryScreen(context: Context,
                 title = { Text(musicEntry.musicName) },
                 navigationIcon = {
                     IconButton(onClick = {
-                        navController.navigate(Screens.EditMusicEntry.passId(musicEntryId))
+                        navController.navigate(Screens.ViewMusicEntry.passId(musicEntryId))
                     }) {
-                        Icon(Icons.Filled.Edit, null)
+                        Icon(Icons.Filled.List, null)
                     }
                 }
             )
@@ -90,22 +92,6 @@ fun ViewMusicEntryScreen(context: Context,
                         color = MaterialTheme.colors.primary
                     )
                 }
-                Column(
-                    // must wrap the button in a column so that we can apply horizontalAlignment
-                    horizontalAlignment = Alignment.End, // push button to corner of screen
-                ) {
-                    SoundButton(
-                        label = "🔎",
-                        musicEntry,
-                        context
-                    ) {
-                        val toner =
-                            ToneGenerator(AudioManager.STREAM_ALARM, ToneGenerator.MAX_VOLUME)
-                        val dotTime = 200
-                        toner.startTone(ToneGenerator.TONE_SUP_DIAL, dotTime)
-                    }
-                }
-
             }
 
             // music format
@@ -190,57 +176,3 @@ fun ViewMusicEntryScreen(context: Context,
 
 }
 
-    @Composable
-    fun SoundButton(label: String, musicEntry: MusicEntry, context: Context, onClick: () -> Unit) {
-        Button(
-            modifier = Modifier
-                .width(50.dp)
-                .height(50.dp)
-                .aspectRatio(1f), // 1:1 aspect ratio: square button
-            onClick = {
-            dispatchAction("Browser", musicEntry, context)
-        }
-        ) {
-            Text(
-                text = label,
-            )
-        }
-    }
-
-
-private fun dispatchAction(option: String, musicEntry: MusicEntry, context: Context): Unit {
-    when (option) {
-        // https://developer.android.com/reference/android/content/Intent#ACTION_WEB_SEARCH
-        "Browser" -> {
-            val intent = Intent(Intent.ACTION_WEB_SEARCH)
-            intent.putExtra(SearchManager.QUERY, musicEntry.artistName + " " + musicEntry.musicName)
-            context.startActivity(intent)
-        }
-//        "Map" -> {
-//            val uri = Uri.parse("geo:0,0?q=${URLEncoder.encode(friend.home, "UTF-8")}")
-//            val intent = Intent(Intent.ACTION_VIEW, uri)
-//            startActivity(intent)
-//        }
-//        "Email" -> {
-//            val intent = Intent(Intent.ACTION_SEND)
-//            intent.type = "text/plain"
-//            intent.putExtra(Intent.EXTRA_EMAIL, friend.email)
-//            startActivity(intent)
-//        }
-//        "Text" -> {
-//            val uri = Uri.parse("smsto:${friend.phone}")
-//            val intent = Intent(Intent.ACTION_SEND, uri)
-//            startActivity(intent)
-//        }
-//        "Call" -> {
-//            val uri = Uri.parse("tel:${friend.phone}")
-//            val intent = Intent(Intent.ACTION_DIAL, uri)
-//            startActivity(intent)
-//        }
-//        "Slack" -> {
-//            val uri = Uri.parse("slack://user?team=TR8N4694&id=${friend.slackId}")
-//            val intent = Intent(Intent.ACTION_VIEW, uri)
-//            startActivity(intent)
-//        }
-    }
-}

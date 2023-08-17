@@ -19,13 +19,10 @@ import nz.ac.uclive.dsi61.assignment1.navigation.Screens
 
 @Composable
 fun MyCollectionScreen(navController: NavController) {
-//    var selectedMusicEntry by remember { mutableStateOf(musicEntries[0]) }
-
     val musicEntries: MutableList<MusicEntry> = MusicEntry.readArrayFromFile(LocalContext.current)
 
     MusicList(musicEntries) { music ->
 //        Toast.makeText(this, music.musicName, Toast.LENGTH_LONG).show()
-//        selectedMusicEntry = music
         navController.navigate(Screens.ViewMusicEntry.passId(music.id))
     }
 
