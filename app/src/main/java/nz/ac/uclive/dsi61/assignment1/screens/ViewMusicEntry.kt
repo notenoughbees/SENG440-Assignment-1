@@ -98,7 +98,7 @@ fun ViewMusicEntryScreen(context: Context,
             ) {
                 Text(
                     text = stringResource(R.string.musicEntryFormat) + ": " +
-                            (musicEntry.musicFormat ?: "-"), // elvis expression
+                            (musicEntry.musicFormat ?: stringResource(R.string.musicEntryValueNotGiven)), // elvis expression
                     fontSize = MaterialTheme.typography.body2.fontSize,
                     fontWeight = MaterialTheme.typography.body2.fontWeight,
                     color = MaterialTheme.colors.secondary
@@ -112,7 +112,7 @@ fun ViewMusicEntryScreen(context: Context,
             ) {
                 Text(
                     text = stringResource(R.string.musicEntryType) + ": " +
-                            (musicEntry.musicType ?: "-"),
+                            (musicEntry.musicType ?: stringResource(R.string.musicEntryValueNotGiven)),
                     fontSize = MaterialTheme.typography.body2.fontSize,
                     fontWeight = MaterialTheme.typography.body2.fontWeight,
                     color = MaterialTheme.colors.secondary
@@ -126,7 +126,7 @@ fun ViewMusicEntryScreen(context: Context,
             ) {
                 Text(
                     text = stringResource(R.string.musicEntryDateObtained) + ": " +
-                            (musicEntry.dateObtained ?: "-"),
+                            (musicEntry.dateObtained ?: stringResource(R.string.musicEntryValueNotGiven)),
                     fontSize = MaterialTheme.typography.body2.fontSize,
                     fontWeight = MaterialTheme.typography.body2.fontWeight,
                     color = MaterialTheme.colors.secondary
@@ -139,7 +139,7 @@ fun ViewMusicEntryScreen(context: Context,
             ) {
                 Text(
                     text = stringResource(R.string.musicEntryPricePaid) + ": " +
-                            (musicEntry.pricePaid ?: "-"),
+                            (musicEntry.pricePaid ?: stringResource(R.string.musicEntryValueNotGiven)),
                     fontSize = MaterialTheme.typography.body2.fontSize,
                     fontWeight = MaterialTheme.typography.body2.fontWeight,
                     color = MaterialTheme.colors.secondary
@@ -153,7 +153,7 @@ fun ViewMusicEntryScreen(context: Context,
             ) {
                 Text(
                     text = stringResource(R.string.musicEntryExtraNotes) + ": " +
-                            (musicEntry.notes ?: "-"),
+                            (musicEntry.notes ?: stringResource(R.string.musicEntryValueNotGiven)),
                     fontSize = MaterialTheme.typography.body2.fontSize,
                     fontWeight = MaterialTheme.typography.body2.fontWeight,
                     color = MaterialTheme.colors.secondary

@@ -1,7 +1,9 @@
 <!-- https://developer.android.com/training/basics/supporting-devices/languages -->
+<!-- https://phrase.com/blog/posts/internationalizing-jetpack-compose-android-apps/ -->
 <resources>
     <string name="app_name">xxxxxxxx</string>
     <string name="file">music.json</string>
+    <string name="musicEntryValueNotGiven">-</string>
     <string name="musicEntryFormat">Format physique</string>
     <string name="musicEntryType">Format d\'enregistrement</string>
     <string name="musicEntryDateObtained">Date d\'obtention</string>

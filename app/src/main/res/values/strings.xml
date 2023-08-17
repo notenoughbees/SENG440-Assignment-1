@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">xxxxxxxx</string>
     <string name="file">music.json</string>
+    <string name="musicEntryValueNotGiven">-</string>
     <string name="musicEntryFormat">Physical format</string>
     <string name="musicEntryType">Recording format</string>
     <string name="musicEntryDateObtained">Date got</string>
