@@ -2,6 +2,7 @@ package nz.ac.uclive.dsi61.assignment1
 
 import android.content.Context
 import android.util.JsonReader
+import android.util.JsonToken
 import android.util.JsonWriter
 import java.io.FileNotFoundException
 import java.io.InputStreamReader
@@ -14,14 +15,14 @@ private val sampleData = mutableListOf<MusicEntry>(
     MusicEntry(3, "Midnights", "Taylor Swift", "CD", "Album",  LocalDate.of(2022, 11, 16), 19.99f, "Bought new :)"),
     MusicEntry(4, "Cotton Eye Joe", "Rednex", "CD", "Single",  LocalDate.of(2022, 11, 16), 0.25f, ""),
     MusicEntry(5, "Fantasies & Delusions", "Billy Joel", "CD", "Album",  LocalDate.of(2023, 8, 10), 1.95f, ""),
-//    MusicEntry(6, "California Flash", "Billy Joel", "Vinyl", "Compilation",  null, null, ""),
-//    MusicEntry(7, "Flaunt It", "Sigue Sigue Sputnik", "Vinyl", "Album",  null, null, ""),
-//    MusicEntry(8, "Greatest Hits Vol. 2", "ABBA", "Vinyl", "Album",  null, null,  ""),
-//    MusicEntry(9, "Creep", "Radiohead", "Vinyl", "Single",  null, null,  "Jukebox. No sleeve"),
-//    MusicEntry(10, "The Exponents", "The Exponents", "Tape", "Album",  null, null,  ""),
-//    MusicEntry(11, "Human Racing", "Nik Kershaw", "Tape", "Album",  null, null,  ""),
-//    MusicEntry(12, "Careless Whisper", "George Michael", "Vinyl", "Single",  null, null,  "Australian Promo version"),
-    //TODO: handle null values
+    MusicEntry(6, "California Flash", "Billy Joel", "Vinyl", "Compilation",  null, null, ""),
+    MusicEntry(7, "Flaunt It", "Sigue Sigue Sputnik", "Vinyl", "Album",  null, null, ""),
+    MusicEntry(8, "Greatest Hits Vol. 2", "ABBA", "Vinyl", "Album",  null, null,  ""),
+    MusicEntry(9, "Creep", "Radiohead", "Vinyl", "Single",  null, null,  "Jukebox. No sleeve"),
+    MusicEntry(10, "The Exponents", "The Exponents", "Tape", "Album",  null, null,  ""),
+    MusicEntry(11, "Human Racing", "Nik Kershaw", "Tape", "Album",  null, null,  ""),
+    MusicEntry(12, "Careless Whisper", "George Michael", "Vinyl", "Single",  null, null,  "Australian Promo version"),
+    MusicEntry(13, "unknown music", "unknown artist", null, null,  null, null, null),
 )
 
 
@@ -46,8 +47,9 @@ class MusicEntry(val id: Int,
         fun readArrayFromFile(context: Context): MutableList<MusicEntry> {
             var musicEntries = mutableListOf<MusicEntry>()
 
+            val fileName = context.resources.getString(R.string.file)
             try {
-                val file = context.openFileInput("music.json")
+                val file = context.openFileInput(fileName)
                 val reader = JsonReader(InputStreamReader(file))
                 println("readArrayFromFile: file exists")
 
@@ -56,7 +58,7 @@ class MusicEntry(val id: Int,
             } catch (e: FileNotFoundException) {
                 println("readArrayFromFile: file does NOT exist")
                 // create empty json file (empty json array, no json objects)
-                val file = context.openFileOutput("music.json", Context.MODE_PRIVATE)
+                val file = context.openFileOutput(fileName, Context.MODE_PRIVATE)
                 val writer = JsonWriter(OutputStreamWriter(file))
                 writer.setIndent("  ")
                 writer.beginArray()
@@ -90,6 +92,34 @@ class MusicEntry(val id: Int,
         }
 
 
+        fun parseNullableDate(reader: JsonReader): LocalDate? {
+//            val parsedValue: LocalDate?
+            if (reader.peek() == JsonToken.NULL) {
+                reader.nextNull()
+//                parsedValue = null
+                return null
+            } else {
+//                parsedValue = LocalDate.parse(reader.nextString())
+                return LocalDate.parse(reader.nextString())
+            }
+//            return parsedValue
+        }
+
+        /**
+         * Reads a single JSON value which could be null.
+         * Returns the value if it exists, else null.
+         */
+        fun parseNullableValue(reader: JsonReader): String? {
+            val parsedValue: String?
+            if (reader.peek() == JsonToken.NULL) {
+                reader.nextNull()
+                parsedValue = null
+            } else {
+                parsedValue = reader.nextString()
+            }
+            return parsedValue
+        }
+
         /**
          * Reads a single JSON object.
          */
@@ -105,16 +135,47 @@ class MusicEntry(val id: Int,
 
             reader.beginObject()
             while (reader.hasNext()) {
+
                 val jsonKey = reader.nextName()
+//                val jsonKey: String
+//                if(reader.peek() == JsonToken.NULL) {
+//                    jsonKey = reader.nextNull()
+//                } else {
+//                    jsonKey = reader.nextName()
+//                }
+                val parsedMusicFormat: String?
                 when (jsonKey) {
                     "id" -> id = reader.nextInt()
                     "musicName" -> musicName = reader.nextString()
                     "artistName" -> artistName = reader.nextString()
-                    "musicFormat" -> musicFormat = reader.nextString()
-                    "musicType" -> musicType = reader.nextString()
-                    "dateObtained" -> dateObtained = LocalDate.parse(reader.nextString())
-                    "pricePaid" -> pricePaid = reader.nextDouble().toFloat()
-                    "notes" -> notes = reader.nextString()
+
+//                    "musicFormat" -> musicFormat = reader.nextString()
+                    "musicFormat" -> {
+//                        if (reader.peek() == JsonToken.NULL) {
+//                            reader.nextNull()
+//                            parsedMusicFormat = null
+//                        } else {
+//                            parsedMusicFormat = reader.nextString()
+//                        }
+//                        musicFormat = parsedMusicFormat
+                        musicFormat = parseNullableValue(reader)
+                    }
+
+                    "musicType" -> musicType = parseNullableValue(reader)
+//                    "dateObtained" -> dateObtained = LocalDate.parse(parseNullableValue(reader)) // TODO: works if date is not null
+//                    "dateObtained" -> dateObtained =
+//                        if(parseNullableDate(reader) != null) parseNullableDate(reader)
+//                        else null
+                    "dateObtained" -> {
+                        if (reader.peek() == JsonToken.NULL) {
+                            reader.nextNull()
+                            dateObtained = null
+                        } else {
+                            dateObtained = LocalDate.parse(reader.nextString())
+                        }
+                    }
+                    "pricePaid" -> pricePaid = parseNullableValue(reader)?.toFloat()
+                    "notes" -> notes = parseNullableValue(reader)
                 }
             }
             reader.endObject()
@@ -131,7 +192,6 @@ class MusicEntry(val id: Int,
 
             // skip elements until we get to the element we want to read
             for(i in 1 until index) {
-                println("i: ${i}")
                 // start reading a new object
                 reader.beginObject()
                 while (reader.hasNext()) {

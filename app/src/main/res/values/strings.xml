@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Assignment 1</string>
+    <string name="file">music.json</string>
+    <string name="musicEntryType">Type</string>
+    <string name="musicEntryFormat">Format</string>
+    <string name="musicEntryDateObtained">Date got</string>
+    <string name="musicEntryPricePaid">Paid</string>
+    <string name="musicEntryExtraNotes">Notes</string>
 </resources>
