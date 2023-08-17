@@ -1,0 +1,10 @@
+<!-- https://developer.android.com/training/basics/supporting-devices/languages -->
+<resources>
+    <string name="app_name">xxxxxxxx</string>
+    <string name="file">music.json</string>
+    <string name="musicEntryFormat">Format physique</string>
+    <string name="musicEntryType">Format d\'enregistrement</string>
+    <string name="musicEntryDateObtained">Date d\'obtention</string>
+    <string name="musicEntryPricePaid">Payé</string>
+    <string name="musicEntryExtraNotes">Notes</string>
+</resources>
