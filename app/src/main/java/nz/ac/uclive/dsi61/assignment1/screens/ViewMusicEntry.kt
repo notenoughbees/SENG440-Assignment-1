@@ -4,13 +4,12 @@ import android.annotation.SuppressLint
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
-import android.media.AudioManager
-import android.media.ToneGenerator
 import android.util.JsonReader
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,7 +29,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import nz.ac.uclive.dsi61.assignment1.MusicEntry
@@ -56,6 +54,7 @@ fun ViewMusicEntryScreen(context: Context,
         topBar = {
             TopAppBar(
                 title = { Text(musicEntry.musicName) },
+                // https://foso.github.io/Jetpack-Compose-Playground/material/topappbar/
                 navigationIcon = {
                     IconButton(onClick = {
                         navController.navigate(Screens.EditMusicEntry.passId(musicEntryId))
@@ -71,14 +70,12 @@ fun ViewMusicEntryScreen(context: Context,
                 .fillMaxSize()
                 .background(Color.White),
             verticalArrangement = Arrangement.Top,
-//            horizontalAlignment = Alignment.Start
         ) {
             // artist name; search button
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(10.dp),
-//                horizontalArrangement = Arrangement.Start
             ) {
                 Column(
                     horizontalAlignment = Alignment.Start
@@ -90,22 +87,14 @@ fun ViewMusicEntryScreen(context: Context,
                         color = MaterialTheme.colors.primary
                     )
                 }
-                Column(
-                    // must wrap the button in a column so that we can apply horizontalAlignment
-                    horizontalAlignment = Alignment.End, // push button to corner of screen
-                ) {
-                    SoundButton(
-                        label = "🔎",
-                        musicEntry,
-                        context
-                    ) {
-                        val toner =
-                            ToneGenerator(AudioManager.STREAM_ALARM, ToneGenerator.MAX_VOLUME)
-                        val dotTime = 200
-                        toner.startTone(ToneGenerator.TONE_SUP_DIAL, dotTime)
-                    }
-                }
-
+                Spacer( // push the button to the right side of the screen
+                    modifier = Modifier.weight(1f)
+                )
+                Button(
+                    label = "🔎",
+                    musicEntry,
+                    context
+                )
             }
 
             // music format
@@ -123,6 +112,7 @@ fun ViewMusicEntryScreen(context: Context,
                     color = MaterialTheme.colors.secondary
                 )
             }
+
             // music type
             Row(
                 modifier = Modifier
@@ -139,7 +129,7 @@ fun ViewMusicEntryScreen(context: Context,
                 )
             }
 
-            // date got
+            // date obtained
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -154,6 +144,7 @@ fun ViewMusicEntryScreen(context: Context,
                     color = MaterialTheme.colors.secondary
                 )
             }
+
             // price paid
             Row(
                 modifier = Modifier
@@ -191,15 +182,15 @@ fun ViewMusicEntryScreen(context: Context,
 }
 
     @Composable
-    fun SoundButton(label: String, musicEntry: MusicEntry, context: Context, onClick: () -> Unit) {
+    fun Button(label: String, musicEntry: MusicEntry, context: Context) {
         Button(
             modifier = Modifier
                 .width(50.dp)
                 .height(50.dp)
                 .aspectRatio(1f), // 1:1 aspect ratio: square button
             onClick = {
-            dispatchAction("Browser", musicEntry, context)
-        }
+                dispatchAction("Browser", musicEntry, context)
+            }
         ) {
             Text(
                 text = label,
@@ -225,21 +216,6 @@ private fun dispatchAction(option: String, musicEntry: MusicEntry, context: Cont
 //            val intent = Intent(Intent.ACTION_SEND)
 //            intent.type = "text/plain"
 //            intent.putExtra(Intent.EXTRA_EMAIL, friend.email)
-//            startActivity(intent)
-//        }
-//        "Text" -> {
-//            val uri = Uri.parse("smsto:${friend.phone}")
-//            val intent = Intent(Intent.ACTION_SEND, uri)
-//            startActivity(intent)
-//        }
-//        "Call" -> {
-//            val uri = Uri.parse("tel:${friend.phone}")
-//            val intent = Intent(Intent.ACTION_DIAL, uri)
-//            startActivity(intent)
-//        }
-//        "Slack" -> {
-//            val uri = Uri.parse("slack://user?team=TR8N4694&id=${friend.slackId}")
-//            val intent = Intent(Intent.ACTION_VIEW, uri)
 //            startActivity(intent)
 //        }
     }

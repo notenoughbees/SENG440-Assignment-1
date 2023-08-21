@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">xxxxxxxx</string>
+    <string name="app_name">Recortext</string>
     <string name="file">music.json</string>
     <string name="musicEntryValueNotGiven">-</string>
     <string name="musicEntryFormat">Physical format</string>
     <string name="musicEntryType">Recording format</string>
-    <string name="musicEntryDateObtained">Date got</string>
+    <string name="musicEntryDateObtained">Date obtained</string>
     <string name="musicEntryPricePaid">Paid</string>
     <string name="musicEntryExtraNotes">Notes</string>
 </resources>
