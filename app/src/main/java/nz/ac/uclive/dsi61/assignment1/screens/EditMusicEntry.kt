@@ -3,8 +3,10 @@ package nz.ac.uclive.dsi61.assignment1.screens
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.JsonReader
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,15 +14,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -37,10 +44,12 @@ import nz.ac.uclive.dsi61.assignment1.R
 import java.io.InputStreamReader
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import nz.ac.uclive.dsi61.assignment1.Constants
 import nz.ac.uclive.dsi61.assignment1.navigation.Screens
 
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun EditMusicEntryScreen(context: Context,
                          navController: NavController,
@@ -69,7 +78,8 @@ fun EditMusicEntryScreen(context: Context,
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White),
+                .background(Color.White)
+                .padding(top = Constants.TOP_APP_BAR_HEIGHT), // push below appbar
             verticalArrangement = Arrangement.Top,
         ) {
             // artist name; save button
@@ -92,21 +102,21 @@ fun EditMusicEntryScreen(context: Context,
 //                                text = "Artist name",
 //                                fontSize = 14.sp,
 //                                fontWeight = FontWeight.Normal,
-//                                color = MaterialTheme.colors.primary
+//                                color = MaterialTheme.colorScheme.primary
 //                            )
 //                        },
                         placeholder = {
                             Text(
                                 text = value,
-                                color = MaterialTheme.colors.primary,
-                                fontSize = MaterialTheme.typography.h5.fontSize,
-                                fontWeight = MaterialTheme.typography.h5.fontWeight,
+                                color = MaterialTheme.colorScheme.primary,
+                                fontSize = MaterialTheme.typography.headlineSmall.fontSize,
+                                fontWeight = MaterialTheme.typography.headlineSmall.fontWeight,
                             )
                         },
                           textStyle = TextStyle(
-                              color = MaterialTheme.colors.primary,
-                              fontSize = MaterialTheme.typography.h5.fontSize,
-                              fontWeight = MaterialTheme.typography.h5.fontWeight,
+                              color = MaterialTheme.colorScheme.primary,
+                              fontSize = MaterialTheme.typography.headlineSmall.fontSize,
+                              fontWeight = MaterialTheme.typography.headlineSmall.fontWeight,
 //                        modifier = Modifier.padding(20.dp)
                         )
                     )
@@ -114,7 +124,7 @@ fun EditMusicEntryScreen(context: Context,
                 Spacer(
                     modifier = Modifier.weight(1f)
                 )
-                Button(
+                MyButton(
                     label = "💾",
                     musicEntry,
                     context
@@ -131,9 +141,9 @@ fun EditMusicEntryScreen(context: Context,
                     text = stringResource(R.string.musicEntryFormat) + ": " +
                             (musicEntry.musicFormat
                                 ?: stringResource(R.string.musicEntryValueNotGiven)), // elvis expression
-                    fontSize = MaterialTheme.typography.body2.fontSize,
-                    fontWeight = MaterialTheme.typography.body2.fontWeight,
-                    color = MaterialTheme.colors.secondary
+                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                    fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+                    color = MaterialTheme.colorScheme.secondary
                 )
             }
 
@@ -143,14 +153,16 @@ fun EditMusicEntryScreen(context: Context,
                     .fillMaxWidth()
                     .padding(10.dp),
             ) {
-                Text(
-                    text = stringResource(R.string.musicEntryType) + ": " +
-                            (musicEntry.musicType
-                                ?: stringResource(R.string.musicEntryValueNotGiven)),
-                    fontSize = MaterialTheme.typography.body2.fontSize,
-                    fontWeight = MaterialTheme.typography.body2.fontWeight,
-                    color = MaterialTheme.colors.secondary
-                )
+//                Text(
+//                    text = stringResource(R.string.musicEntryType) + ": " +
+//                            (musicEntry.musicType
+//                                ?: stringResource(R.string.musicEntryValueNotGiven)),
+//                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+//                    fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+//                    color = MaterialTheme.colorScheme.secondary
+//                )
+
+                myDropdown()
             }
 
             // date obtained
@@ -163,9 +175,9 @@ fun EditMusicEntryScreen(context: Context,
                     text = stringResource(R.string.musicEntryDateObtained) + ": " +
                             (musicEntry.dateObtained
                                 ?: stringResource(R.string.musicEntryValueNotGiven)),
-                    fontSize = MaterialTheme.typography.body2.fontSize,
-                    fontWeight = MaterialTheme.typography.body2.fontWeight,
-                    color = MaterialTheme.colors.secondary
+                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                    fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+                    color = MaterialTheme.colorScheme.secondary
                 )
             }
 
@@ -179,9 +191,9 @@ fun EditMusicEntryScreen(context: Context,
                     text = stringResource(R.string.musicEntryPricePaid) + ": " +
                             (musicEntry.pricePaid
                                 ?: stringResource(R.string.musicEntryValueNotGiven)),
-                    fontSize = MaterialTheme.typography.body2.fontSize,
-                    fontWeight = MaterialTheme.typography.body2.fontWeight,
-                    color = MaterialTheme.colors.secondary
+                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                    fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+                    color = MaterialTheme.colorScheme.secondary
                 )
             }
 
@@ -194,9 +206,9 @@ fun EditMusicEntryScreen(context: Context,
                 Text(
                     text = stringResource(R.string.musicEntryExtraNotes) + ": " +
                             (musicEntry.notes ?: stringResource(R.string.musicEntryValueNotGiven)),
-                    fontSize = MaterialTheme.typography.body2.fontSize,
-                    fontWeight = MaterialTheme.typography.body2.fontWeight,
-                    color = MaterialTheme.colors.secondary
+                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                    fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+                    color = MaterialTheme.colorScheme.secondary
                 )
             }
 
@@ -205,3 +217,49 @@ fun EditMusicEntryScreen(context: Context,
 
 }
 
+
+@OptIn(ExperimentalMaterial3Api::class) // exposedDropdown is experimental
+@Composable
+fun myDropdown() {
+    val context = LocalContext.current
+    val items = arrayOf("xxx", "yyy", "zzz")
+    var expanded by remember { mutableStateOf(false) }
+    var selectedText by remember { mutableStateOf(items[0]) }
+
+    Box (
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(32.dp)
+    ) {
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = {
+                expanded = !expanded
+            }
+        ) {
+            TextField(
+                value = selectedText,
+                onValueChange = {},
+                readOnly = true,
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                modifier = Modifier.menuAnchor()
+            )
+
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                items.forEach { item ->
+                    DropdownMenuItem(
+                        text = { Text(text = item) },
+                        onClick = {
+                            selectedText = item
+                            expanded = false
+                            Toast.makeText(context, item, Toast.LENGTH_LONG).show()
+                        }
+                    )
+                }
+            }
+        }
+    }
+}

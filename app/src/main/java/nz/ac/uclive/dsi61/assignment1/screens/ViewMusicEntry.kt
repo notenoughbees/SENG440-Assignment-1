@@ -16,29 +16,32 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.Button
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import nz.ac.uclive.dsi61.assignment1.Constants
 import nz.ac.uclive.dsi61.assignment1.MusicEntry
 import nz.ac.uclive.dsi61.assignment1.R
-import java.io.InputStreamReader
-import androidx.compose.ui.res.stringResource
 import nz.ac.uclive.dsi61.assignment1.navigation.Screens
+import java.io.InputStreamReader
 
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ViewMusicEntryScreen(context: Context,
                          navController: NavController,
@@ -68,7 +71,8 @@ fun ViewMusicEntryScreen(context: Context,
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White),
+                .background(Color.White)
+                .padding(top = Constants.TOP_APP_BAR_HEIGHT), // push below appbar
             verticalArrangement = Arrangement.Top,
         ) {
             // artist name; search button
@@ -82,15 +86,15 @@ fun ViewMusicEntryScreen(context: Context,
                 ) {
                     Text(
                         text = musicEntry.artistName,
-                        fontSize = MaterialTheme.typography.h5.fontSize,
-                        fontWeight = MaterialTheme.typography.h5.fontWeight,
-                        color = MaterialTheme.colors.primary
+                        fontSize = MaterialTheme.typography.headlineSmall.fontSize,
+                        fontWeight = MaterialTheme.typography.headlineSmall.fontWeight,
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
                 Spacer( // push the button to the right side of the screen
                     modifier = Modifier.weight(1f)
                 )
-                Button(
+                MyButton(
                     label = "🔎",
                     musicEntry,
                     context
@@ -107,9 +111,9 @@ fun ViewMusicEntryScreen(context: Context,
                     text = stringResource(R.string.musicEntryFormat) + ": " +
                             (musicEntry.musicFormat
                                 ?: stringResource(R.string.musicEntryValueNotGiven)), // elvis expression
-                    fontSize = MaterialTheme.typography.body2.fontSize,
-                    fontWeight = MaterialTheme.typography.body2.fontWeight,
-                    color = MaterialTheme.colors.secondary
+                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                    fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+                    color = MaterialTheme.colorScheme.secondary
                 )
             }
 
@@ -123,9 +127,9 @@ fun ViewMusicEntryScreen(context: Context,
                     text = stringResource(R.string.musicEntryType) + ": " +
                             (musicEntry.musicType
                                 ?: stringResource(R.string.musicEntryValueNotGiven)),
-                    fontSize = MaterialTheme.typography.body2.fontSize,
-                    fontWeight = MaterialTheme.typography.body2.fontWeight,
-                    color = MaterialTheme.colors.secondary
+                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                    fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+                    color = MaterialTheme.colorScheme.secondary
                 )
             }
 
@@ -139,9 +143,9 @@ fun ViewMusicEntryScreen(context: Context,
                     text = stringResource(R.string.musicEntryDateObtained) + ": " +
                             (musicEntry.dateObtained
                                 ?: stringResource(R.string.musicEntryValueNotGiven)),
-                    fontSize = MaterialTheme.typography.body2.fontSize,
-                    fontWeight = MaterialTheme.typography.body2.fontWeight,
-                    color = MaterialTheme.colors.secondary
+                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                    fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+                    color = MaterialTheme.colorScheme.secondary
                 )
             }
 
@@ -155,9 +159,9 @@ fun ViewMusicEntryScreen(context: Context,
                     text = stringResource(R.string.musicEntryPricePaid) + ": " +
                             (musicEntry.pricePaid
                                 ?: stringResource(R.string.musicEntryValueNotGiven)),
-                    fontSize = MaterialTheme.typography.body2.fontSize,
-                    fontWeight = MaterialTheme.typography.body2.fontWeight,
-                    color = MaterialTheme.colors.secondary
+                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                    fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+                    color = MaterialTheme.colorScheme.secondary
                 )
             }
 
@@ -170,19 +174,18 @@ fun ViewMusicEntryScreen(context: Context,
                 Text(
                     text = stringResource(R.string.musicEntryExtraNotes) + ": " +
                             (musicEntry.notes ?: stringResource(R.string.musicEntryValueNotGiven)),
-                    fontSize = MaterialTheme.typography.body2.fontSize,
-                    fontWeight = MaterialTheme.typography.body2.fontWeight,
-                    color = MaterialTheme.colors.secondary
+                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                    fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+                    color = MaterialTheme.colorScheme.secondary
                 )
             }
 
         }
     }
-
 }
 
     @Composable
-    fun Button(label: String, musicEntry: MusicEntry, context: Context) {
+    fun MyButton(label: String, musicEntry: MusicEntry, context: Context) {
         Button(
             modifier = Modifier
                 .width(50.dp)
