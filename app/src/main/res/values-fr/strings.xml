@@ -1,12 +1,23 @@
-<!-- https://developer.android.com/training/basics/supporting-devices/languages -->
-<!-- https://phrase.com/blog/posts/internationalizing-jetpack-compose-android-apps/ -->
 <resources>
     <string name="app_name">Recortext</string>
     <string name="file">music.json</string>
+    <string name="formatPhysicalCD">CD</string>
+    <string name="formatPhysicalCassette">Cassette</string>
+    <string name="formatPhysicalDigital">Numérique</string>
+    <string name="formatPhysicalVinyl">Vinyle</string>
+    <string name="formatRecordingAlbum">Album</string>
+    <string name="formatRecordingLP">LP</string>
+    <string name="formatRecordingEP">EP</string>
+    <string name="formatRecordingMaxiSingle">Maxi-single</string>
+    <string name="formatRecordingSingle">Simple</string>
     <string name="musicEntryValueNotGiven">-</string>
-    <string name="musicEntryFormat">Format physique</string>
-    <string name="musicEntryType">Format d\'enregistrement</string>
+    <string name="musicEntryArtistName">Nom d\'artiste</string>
+    <string name="musicEntryFormatPhysical">Format physique</string>
+    <string name="musicEntryFormatRecording">Format d\'enregistrement</string>
     <string name="musicEntryDateObtained">Date d\'obtention</string>
     <string name="musicEntryPricePaid">Payé</string>
     <string name="musicEntryExtraNotes">Notes</string>
+    <string name="other">Autre</string>
 </resources>
+    <!-- https://developer.android.com/training/basics/supporting-devices/languages -->
+    <!-- https://phrase.com/blog/posts/internationalizing-jetpack-compose-android-apps/ -->

@@ -1,10 +1,21 @@
 <resources>
     <string name="app_name">Recortext</string>
     <string name="file">music.json</string>
+    <string name="formatPhysicalCD">CD</string>
+    <string name="formatPhysicalCassette">Cassette</string>
+    <string name="formatPhysicalDigital">Digital</string>
+    <string name="formatPhysicalVinyl">Vinyl</string>
+    <string name="formatRecordingAlbum">Album</string>
+    <string name="formatRecordingLP">LP</string>
+    <string name="formatRecordingEP">EP</string>
+    <string name="formatRecordingMaxiSingle">Maxi-single</string>
+    <string name="formatRecordingSingle">Single</string>
     <string name="musicEntryValueNotGiven">-</string>
-    <string name="musicEntryFormat">Physical format</string>
-    <string name="musicEntryType">Recording format</string>
+    <string name="musicEntryArtistName">Artist name</string>
+    <string name="musicEntryFormatPhysical">Physical format</string>
+    <string name="musicEntryFormatRecording">Recording format</string>
     <string name="musicEntryDateObtained">Date obtained</string>
     <string name="musicEntryPricePaid">Paid</string>
     <string name="musicEntryExtraNotes">Notes</string>
+    <string name="other">Other</string>
 </resources>

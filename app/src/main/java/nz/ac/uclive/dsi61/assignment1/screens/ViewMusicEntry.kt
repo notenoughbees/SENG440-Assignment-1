@@ -104,14 +104,14 @@ fun ViewMusicEntryScreen(context: Context,
                 )
             }
 
-            // music format
+            // physical format
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(10.dp),
             ) {
                 Text(
-                    text = stringResource(R.string.musicEntryFormat) + ": " +
+                    text = stringResource(R.string.musicEntryFormatPhysical) + ": " +
                             (musicEntry.musicFormat
                                 ?: stringResource(R.string.musicEntryValueNotGiven)), // elvis expression
                     fontSize = MaterialTheme.typography.bodyMedium.fontSize,
@@ -120,14 +120,14 @@ fun ViewMusicEntryScreen(context: Context,
                 )
             }
 
-            // music type
+            // recording format
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(10.dp),
             ) {
                 Text(
-                    text = stringResource(R.string.musicEntryType) + ": " +
+                    text = stringResource(R.string.musicEntryFormatRecording) + ": " +
                             (musicEntry.musicType
                                 ?: stringResource(R.string.musicEntryValueNotGiven)),
                     fontSize = MaterialTheme.typography.bodyMedium.fontSize,
@@ -206,7 +206,7 @@ fun MyButton(label: String, musicEntry: MusicEntry, context: Context) {
 
 @Composable
 fun MyFilledIconButton(icon: ImageVector, musicEntry: MusicEntry, context: Context) {
-    FilledIconButton(
+    FilledIconButton( // https://semicolonspace.com/jetpack-compose-material3-icon-buttons/#filled
         modifier = Modifier
             .width(50.dp)
             .height(50.dp)
