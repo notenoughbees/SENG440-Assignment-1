@@ -13,8 +13,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,7 +36,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import nz.ac.uclive.dsi61.assignment1.MusicEntry
@@ -124,8 +123,8 @@ fun EditMusicEntryScreen(context: Context,
                 Spacer(
                     modifier = Modifier.weight(1f)
                 )
-                MyButton(
-                    label = "💾",
+                MyFilledIconButton(
+                    icon = Icons.Filled.Done,
                     musicEntry,
                     context
                 )
@@ -162,7 +161,7 @@ fun EditMusicEntryScreen(context: Context,
 //                    color = MaterialTheme.colorScheme.secondary
 //                )
 
-                myDropdown()
+                MyDropdown()
             }
 
             // date obtained
@@ -211,16 +210,14 @@ fun EditMusicEntryScreen(context: Context,
                     color = MaterialTheme.colorScheme.secondary
                 )
             }
-
         }
     }
-
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class) // exposedDropdown is experimental
 @Composable
-fun myDropdown() {
+fun MyDropdown() {
     val context = LocalContext.current
     val items = arrayOf("xxx", "yyy", "zzz")
     var expanded by remember { mutableStateOf(false) }

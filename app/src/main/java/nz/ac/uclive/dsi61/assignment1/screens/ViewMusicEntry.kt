@@ -18,8 +18,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -30,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -94,8 +97,8 @@ fun ViewMusicEntryScreen(context: Context,
                 Spacer( // push the button to the right side of the screen
                     modifier = Modifier.weight(1f)
                 )
-                MyButton(
-                    label = "🔎",
+                MyFilledIconButton(
+                    icon = Icons.Filled.Search,
                     musicEntry,
                     context
                 )
@@ -184,23 +187,43 @@ fun ViewMusicEntryScreen(context: Context,
     }
 }
 
-    @Composable
-    fun MyButton(label: String, musicEntry: MusicEntry, context: Context) {
-        Button(
-            modifier = Modifier
-                .width(50.dp)
-                .height(50.dp)
-                .aspectRatio(1f), // 1:1 aspect ratio: square button
-            onClick = {
-                dispatchAction("Browser", musicEntry, context)
-            }
-        ) {
-            Text(
-                text = label,
-            )
+@Composable
+fun MyButton(label: String, musicEntry: MusicEntry, context: Context) {
+    Button(
+        modifier = Modifier
+            .width(50.dp)
+            .height(50.dp)
+            .aspectRatio(1f), // 1:1 aspect ratio: square button
+        onClick = {
+            dispatchAction("Browser", musicEntry, context)
         }
+    ) {
+        Text(
+            text = label,
+        )
     }
+}
 
+@Composable
+fun MyFilledIconButton(icon: ImageVector, musicEntry: MusicEntry, context: Context) {
+    FilledIconButton(
+        modifier = Modifier
+            .width(50.dp)
+            .height(50.dp)
+            .aspectRatio(1f), // 1:1 aspect ratio: square button
+        onClick = {
+            dispatchAction("Browser", musicEntry, context)
+        }
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = Color.Black,
+//            modifier = Modifier.fillMaxSize()
+//            modifier = Modifier.size(30.dp)
+        )
+    }
+}
 
 private fun dispatchAction(option: String, musicEntry: MusicEntry, context: Context): Unit {
     when (option) {
