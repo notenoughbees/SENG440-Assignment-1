@@ -70,7 +70,7 @@ fun ViewMusicEntryScreen(context: Context,
                     }
                 },
                 colors = TopAppBarDefaults.largeTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.tertiary
+                    containerColor = MaterialTheme.colorScheme.surface
                 )
             )
         }
@@ -216,7 +216,7 @@ fun SearchBrowserButton(icon: ImageVector, musicEntry: MusicEntry, context: Cont
             .height(50.dp)
             .aspectRatio(1f), // 1:1 aspect ratio: square button
         colors = IconButtonDefaults.iconButtonColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = MaterialTheme.colorScheme.tertiary
         ),
         onClick = {
             dispatchAction("Browser", musicEntry, context)
@@ -225,7 +225,7 @@ fun SearchBrowserButton(icon: ImageVector, musicEntry: MusicEntry, context: Cont
         Icon(
             imageVector = icon,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.tertiary,
+            tint = MaterialTheme.colorScheme.surface,
 //            modifier = Modifier.fillMaxSize()
 //            modifier = Modifier.size(30.dp)
         )

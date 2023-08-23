@@ -38,7 +38,7 @@ fun MyCollectionScreen(navController: NavController) {
                     Text("My Collection")
                 },
                 colors = TopAppBarDefaults.largeTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.tertiary
+                    containerColor = MaterialTheme.colorScheme.surface
                 )
             )
         }
@@ -76,6 +76,7 @@ fun MusicList(musics: MutableList<MusicEntry>, onMusicEntryClick: (MusicEntry) -
                     },
                 style = MaterialTheme.typography.bodyLarge,
                 text = music.musicName + "\n" + music.artistName,
+                color = MaterialTheme.colorScheme.primary,
             )
         }
     }

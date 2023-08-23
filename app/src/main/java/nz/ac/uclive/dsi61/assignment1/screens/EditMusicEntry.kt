@@ -85,7 +85,7 @@ fun EditMusicEntryScreen(context: Context,
                     }
                 },
                 colors = TopAppBarDefaults.largeTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.tertiary
+                    containerColor = MaterialTheme.colorScheme.surface
                 )
             )
         }
@@ -168,7 +168,8 @@ fun EditMusicEntryScreen(context: Context,
                                     stringResource(R.string.formatRecordingLP),
                                     stringResource(R.string.formatRecordingEP),
                                     stringResource(R.string.formatRecordingMaxiSingle),
-                                    stringResource(R.string.formatRecordingSingle)) //33, 45, 78RPM, Promo, Limited/Deluxe edition...
+                                    stringResource(R.string.formatRecordingSingle),
+                                    stringResource(R.string.formatRecordingCompilation)) //33, 45, 78RPM, Promo, Limited/Deluxe edition...
                 MyDropdown(stringResource(R.string.musicEntryFormatPhysical), items)
             }
 
@@ -323,9 +324,11 @@ fun MyDropdown(label: String, items: Array<String>) { // https://alexzh.com/jetp
                     fontWeight = MaterialTheme.typography.bodyMedium.fontWeight
                 ),
                 colors = TextFieldDefaults.textFieldColors(
-                    containerColor = MaterialTheme.colorScheme.onSurface,
-                    focusedLabelColor = MaterialTheme.colorScheme.primary,
+                    containerColor = MaterialTheme.colorScheme.onSurface, // dropdown background
+                    focusedLabelColor = MaterialTheme.colorScheme.primary, // label above text
                     unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+                    focusedTrailingIconColor = MaterialTheme.colorScheme.primary, // dropdown arrow
+                    unfocusedTrailingIconColor = MaterialTheme.colorScheme.primary,
                 )
             )
 
@@ -355,7 +358,7 @@ fun SaveMusicEntryButton(icon: ImageVector, musicEntry: MusicEntry, context: Con
             .height(50.dp)
             .aspectRatio(1f), // 1:1 aspect ratio: square button
         colors = IconButtonDefaults.iconButtonColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = MaterialTheme.colorScheme.tertiary
         ),
         onClick = {
             //dispatchAction("Browser", musicEntry, context)
@@ -365,7 +368,7 @@ fun SaveMusicEntryButton(icon: ImageVector, musicEntry: MusicEntry, context: Con
         Icon(
             imageVector = icon,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.tertiary,
+            tint = MaterialTheme.colorScheme.surface,
 //            modifier = Modifier.fillMaxSize()
 //            modifier = Modifier.size(30.dp)
         )

@@ -10,6 +10,7 @@
     <string name="formatRecordingEP">EP</string>
     <string name="formatRecordingMaxiSingle">Maxi-single</string>
     <string name="formatRecordingSingle">Single</string>
+    <string name="formatRecordingCompilation">Compilation</string>
     <string name="musicEntryValueNotGiven">-</string>
     <string name="musicEntryArtistName">Artist name</string>
     <string name="musicEntryFormatPhysical">Physical format</string>
