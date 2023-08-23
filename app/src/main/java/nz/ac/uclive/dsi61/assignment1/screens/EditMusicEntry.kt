@@ -12,24 +12,32 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,8 +45,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -75,14 +83,17 @@ fun EditMusicEntryScreen(context: Context,
                     }) {
                         Icon(Icons.Filled.List, null)
                     }
-                }
+                },
+                colors = TopAppBarDefaults.largeTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.tertiary
+                )
             )
         }
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White)
+                .background(MaterialTheme.colorScheme.background)
                 .padding(top = Constants.TOP_APP_BAR_HEIGHT), // push below appbar
             verticalArrangement = Arrangement.Top,
         ) {
@@ -103,17 +114,22 @@ fun EditMusicEntryScreen(context: Context,
                         },
                         label = { Text(text = stringResource(R.string.musicEntryArtistName)) },
                           textStyle = TextStyle(
-                              color = MaterialTheme.colorScheme.primary,
-                              fontSize = MaterialTheme.typography.headlineSmall.fontSize,
-                              fontWeight = MaterialTheme.typography.headlineSmall.fontWeight,
+                              color = MaterialTheme.colorScheme.secondary,
+                              fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                              fontWeight = MaterialTheme.typography.bodyMedium.fontWeight
 //                        modifier = Modifier.padding(20.dp)
+                        ),
+                        colors = TextFieldDefaults.textFieldColors(
+                            containerColor = MaterialTheme.colorScheme.onSurface,
+                            focusedLabelColor = MaterialTheme.colorScheme.primary,
+                            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
                         )
                     )
                 }
                 Spacer(
                     modifier = Modifier.weight(1f)
                 )
-                MyFilledIconButton(
+                SaveMusicEntryButton(
                     icon = Icons.Filled.Done,
                     musicEntry,
                     context
@@ -148,10 +164,11 @@ fun EditMusicEntryScreen(context: Context,
                     .fillMaxWidth()
 //                    .padding(10.dp),
             ) {
-                val items = arrayOf(stringResource(R.string.formatPhysicalCD),
-                    stringResource(R.string.formatPhysicalCassette),
-                    stringResource(R.string.formatPhysicalDigital),
-                    stringResource(R.string.formatPhysicalVinyl)) //33, 45, 78RPM, Promo, Limited/Deluxe edition...
+                val items = arrayOf(stringResource(R.string.formatRecordingAlbum),
+                                    stringResource(R.string.formatRecordingLP),
+                                    stringResource(R.string.formatRecordingEP),
+                                    stringResource(R.string.formatRecordingMaxiSingle),
+                                    stringResource(R.string.formatRecordingSingle)) //33, 45, 78RPM, Promo, Limited/Deluxe edition...
                 MyDropdown(stringResource(R.string.musicEntryFormatPhysical), items)
             }
 
@@ -167,25 +184,40 @@ fun EditMusicEntryScreen(context: Context,
 
                 var selectedDateText by remember { mutableStateOf("") }
 
-                // Fetch current date
-                //TODO: fetch chosen date
-                val year = calendar[Calendar.YEAR]
-                val month = calendar[Calendar.MONTH]
-                val day = calendar[Calendar.DAY_OF_MONTH]
+                // prepare values for the date picker
+                val year: Int
+                val month: Int
+                val day: Int
+                if(musicEntry.dateObtained == null) {
+                    // fetch current date
+                    year = calendar[Calendar.YEAR]
+                    month = calendar[Calendar.MONTH]
+                    day = calendar[Calendar.DAY_OF_MONTH]
+                } else {
+                    // fetch chosen date
+                    year = musicEntry.dateObtained.year
+                    month = musicEntry.dateObtained.monthValue - 1 // months start at 0
+                    day = musicEntry.dateObtained.dayOfMonth
+                }
 
+                // open the date picker
                 val datePicker = DatePickerDialog(
                     context,
                     { _: DatePicker, selectedYear: Int, selectedMonth: Int, selectedDay: Int ->
-                        selectedDateText = "$selectedDay/{$selectedMonth + 1}/$selectedYear"
+                        selectedDateText = "$selectedDay/{$selectedMonth}/$selectedYear"
                     }, year, month, day
                 )
-
 
                 Button(
                     onClick = {
                         datePicker.show()
                     },
+//                    modifier = Modifier.fillMaxWidth(),
                     shape = RectangleShape,
+                    colors = ButtonDefaults.buttonColors(
+                        // https://developer.android.com/reference/kotlin/androidx/compose/material3/ButtonColors
+                        containerColor = MaterialTheme.colorScheme.onSurface,
+                    )
                 ) {
                     Text(
                         text = musicEntry.dateObtained.toString(),
@@ -194,7 +226,6 @@ fun EditMusicEntryScreen(context: Context,
                         fontWeight = MaterialTheme.typography.bodyMedium.fontWeight
                     )
                 }
-
 
             }
 
@@ -218,6 +249,11 @@ fun EditMusicEntryScreen(context: Context,
                             color = MaterialTheme.colorScheme.secondary,
                             fontSize = MaterialTheme.typography.bodyMedium.fontSize,
                             fontWeight = MaterialTheme.typography.bodyMedium.fontWeight
+                        ),
+                        colors = TextFieldDefaults.textFieldColors(
+                            containerColor = MaterialTheme.colorScheme.onSurface,
+                            focusedLabelColor = MaterialTheme.colorScheme.primary,
+                            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
                         )
                     )
                 }
@@ -240,6 +276,11 @@ fun EditMusicEntryScreen(context: Context,
                         color = MaterialTheme.colorScheme.secondary,
                         fontSize = MaterialTheme.typography.bodyMedium.fontSize,
                         fontWeight = MaterialTheme.typography.bodyMedium.fontWeight
+                    ),
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = MaterialTheme.colorScheme.onSurface,
+                        focusedLabelColor = MaterialTheme.colorScheme.primary,
+                        unfocusedLabelColor = MaterialTheme.colorScheme.primary,
                     ),
                     singleLine = false
                 )
@@ -270,7 +311,9 @@ fun MyDropdown(label: String, items: Array<String>) { // https://alexzh.com/jetp
             TextField(
                 label = { Text(label) },
                 value = selectedText,
-                onValueChange = {},
+                onValueChange = {
+
+                },
                 readOnly = true,
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 modifier = Modifier.menuAnchor(),
@@ -278,6 +321,11 @@ fun MyDropdown(label: String, items: Array<String>) { // https://alexzh.com/jetp
                     color = MaterialTheme.colorScheme.secondary,
                     fontSize = MaterialTheme.typography.bodyMedium.fontSize,
                     fontWeight = MaterialTheme.typography.bodyMedium.fontWeight
+                ),
+                colors = TextFieldDefaults.textFieldColors(
+                    containerColor = MaterialTheme.colorScheme.onSurface,
+                    focusedLabelColor = MaterialTheme.colorScheme.primary,
+                    unfocusedLabelColor = MaterialTheme.colorScheme.primary,
                 )
             )
 
@@ -291,11 +339,35 @@ fun MyDropdown(label: String, items: Array<String>) { // https://alexzh.com/jetp
                         onClick = {
                             selectedText = item
                             expanded = false
-                            Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
                         }
                     )
                 }
             }
         }
+    }
+}
+
+@Composable
+fun SaveMusicEntryButton(icon: ImageVector, musicEntry: MusicEntry, context: Context) {
+    FilledIconButton( // https://semicolonspace.com/jetpack-compose-material3-icon-buttons/#filled
+        modifier = Modifier
+            .width(50.dp)
+            .height(50.dp)
+            .aspectRatio(1f), // 1:1 aspect ratio: square button
+        colors = IconButtonDefaults.iconButtonColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        onClick = {
+            //dispatchAction("Browser", musicEntry, context)
+            Toast.makeText(context, "Saved music details!", Toast.LENGTH_SHORT).show()
+        }
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.tertiary,
+//            modifier = Modifier.fillMaxSize()
+//            modifier = Modifier.size(30.dp)
+        )
     }
 }
