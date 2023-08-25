@@ -2,6 +2,7 @@ package nz.ac.uclive.dsi61.assignment1.screens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -17,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -65,19 +67,28 @@ fun MusicList(musics: MutableList<MusicEntry>, onMusicEntryClick: (MusicEntry) -
         // make the music list start below the app bar so it doesn't get covered
         modifier = Modifier.padding(top = TOP_APP_BAR_HEIGHT)
     ) {
-
         items(musics) { music ->
             // Styling for an individual item in the list
-            Text(
+            Box(
                 modifier = Modifier
                     .padding(all = 40.dp)
                     .clickable {
                         onMusicEntryClick(music)
                     },
-                style = MaterialTheme.typography.bodyLarge,
-                text = music.musicName + "\n" + music.artistName,
-                color = MaterialTheme.colorScheme.primary,
-            )
+            ) {
+                // separate the text into 2 objects so that one line can be bold, the other normal
+                Text(
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold,
+                    text = music.musicName,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+                Text(
+                    style = MaterialTheme.typography.bodyLarge,
+                    text = "\n" + music.artistName,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+            }
         }
     }
 }

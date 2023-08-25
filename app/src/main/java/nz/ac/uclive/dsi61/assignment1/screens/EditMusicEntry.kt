@@ -39,6 +39,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -57,11 +58,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import nz.ac.uclive.dsi61.assignment1.Constants
 import nz.ac.uclive.dsi61.assignment1.navigation.Screens
+import java.time.LocalDate
 import java.util.Calendar
 
 
 @OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnrememberedMutableState")
 @Composable
 fun EditMusicEntryScreen(context: Context,
                          navController: NavController,
@@ -72,6 +74,27 @@ fun EditMusicEntryScreen(context: Context,
     val file = context.openFileInput(fileName)
     val reader = JsonReader(InputStreamReader(file))
     val musicEntry = MusicEntry.readAtIndex(reader, musicEntryId)
+
+    // fields to update when clicking the save button
+    val dropdownPhysicalFormatItems = arrayOf(stringResource(R.string.formatPhysicalCD),
+        stringResource(R.string.formatPhysicalCassette),
+        stringResource(R.string.formatPhysicalDigital),
+        stringResource(R.string.formatPhysicalVinyl),
+        stringResource(R.string.other))
+    val dropdownRecordingFormatItems = arrayOf(stringResource(R.string.formatRecordingAlbum),
+        stringResource(R.string.formatRecordingLP),
+        stringResource(R.string.formatRecordingEP),
+        stringResource(R.string.formatRecordingMaxiSingle),
+        stringResource(R.string.formatRecordingSingle),
+        stringResource(R.string.formatRecordingCompilation),
+        stringResource(R.string.other)) //33, 45, 78RPM, Promo, Limited/Deluxe edition...
+    var selectedMusicName by remember { mutableStateOf(musicEntry.musicName) }
+    var selectedArtistName by remember { mutableStateOf(musicEntry.artistName) }
+    var selectedPhysicalFormat by remember { mutableStateOf(musicEntry.physicalFormat?: dropdownPhysicalFormatItems[-1]) } // last item is "Other"
+    var selectedRecordingFormat by remember { mutableStateOf(musicEntry.recordingFormat?: dropdownRecordingFormatItems[-1]) }
+    var selectedDateObtained by remember { mutableStateOf("") }
+    var selectedPricePaid by remember { mutableStateOf(musicEntry.pricePaid.toString()) }
+    var selectedNotes by remember { mutableStateOf(musicEntry.notes) }
 
     Scaffold(
         topBar = {
@@ -97,6 +120,33 @@ fun EditMusicEntryScreen(context: Context,
                 .padding(top = Constants.TOP_APP_BAR_HEIGHT), // push below appbar
             verticalArrangement = Arrangement.Top,
         ) {
+
+            // music name
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
+            ) {
+                TextField(
+                    value = selectedMusicName,
+                    onValueChange = {
+                        selectedMusicName = it
+                    },
+                    label = { Text(text = stringResource(R.string.musicEntryMusicName)) },
+                    textStyle = TextStyle(
+                        color = MaterialTheme.colorScheme.secondary,
+                        fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                        fontWeight = MaterialTheme.typography.bodyMedium.fontWeight
+//                        modifier = Modifier.padding(20.dp)
+                    ),
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = MaterialTheme.colorScheme.onSurface,
+                        focusedLabelColor = MaterialTheme.colorScheme.primary,
+                        unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+                    )
+                )
+            }
+
             // artist name; save button
             Row(
                 modifier = Modifier
@@ -106,11 +156,10 @@ fun EditMusicEntryScreen(context: Context,
                 Column(
                     horizontalAlignment = Alignment.Start
                 ) {
-                    var value by remember { mutableStateOf(musicEntry.artistName) }
                     TextField(
-                        value = value,
+                        value = selectedArtistName,
                         onValueChange = {
-                            value = it
+                            selectedArtistName = it
                         },
                         label = { Text(text = stringResource(R.string.musicEntryArtistName)) },
                           textStyle = TextStyle(
@@ -129,13 +178,25 @@ fun EditMusicEntryScreen(context: Context,
                 Spacer(
                     modifier = Modifier.weight(1f)
                 )
+
+                val calendar = Calendar.getInstance()
+                var year = calendar[Calendar.YEAR]
+                var month = calendar[Calendar.MONTH]
+                var day = calendar[Calendar.DAY_OF_MONTH]
+                if (selectedDateObtained != "") {
+                    val selectedDateObtainedParts: List<String> = selectedDateObtained.split("/")
+                    day = selectedDateObtainedParts[0].toInt()
+                    month = selectedDateObtainedParts[1].toInt()
+                    year = selectedDateObtainedParts[2].toInt()
+                }
                 SaveMusicEntryButton(
                     icon = Icons.Filled.Done,
-                    musicEntry,
-                    context
+                    musicEntry, context, selectedMusicName,
+                    selectedArtistName, selectedPhysicalFormat, selectedRecordingFormat, //TODO
+                    LocalDate.of(year, month, day), selectedPricePaid.toFloat(),
+                    selectedNotes ?: context.resources.getString(R.string.musicEntryValueNotGiven)
                 )
             }
-
 
             // physical format
             Row(
@@ -143,19 +204,12 @@ fun EditMusicEntryScreen(context: Context,
                     .fillMaxWidth()
 //                    .padding(10.dp),
             ) {
-//                Text(
-//                    text = stringResource(R.string.musicEntryFormat) + ": " +
-//                            (musicEntry.musicFormat
-//                                ?: stringResource(R.string.musicEntryValueNotGiven)), // elvis expression
-//                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-//                    fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
-//                    color = MaterialTheme.colorScheme.secondary
-//                )
-                val items = arrayOf(stringResource(R.string.formatPhysicalCD),
-                                    stringResource(R.string.formatPhysicalCassette),
-                                    stringResource(R.string.formatPhysicalDigital),
-                                    stringResource(R.string.formatPhysicalVinyl))
-                MyDropdown(stringResource(R.string.musicEntryFormatPhysical), items)
+                MyDropdown(
+                    stringResource(R.string.musicEntryFormatPhysical),
+                    dropdownPhysicalFormatItems,
+                    mutableStateOf(selectedPhysicalFormat)) {
+                        newSelection -> selectedPhysicalFormat = newSelection
+                }
             }
 
             // recording format
@@ -164,13 +218,11 @@ fun EditMusicEntryScreen(context: Context,
                     .fillMaxWidth()
 //                    .padding(10.dp),
             ) {
-                val items = arrayOf(stringResource(R.string.formatRecordingAlbum),
-                                    stringResource(R.string.formatRecordingLP),
-                                    stringResource(R.string.formatRecordingEP),
-                                    stringResource(R.string.formatRecordingMaxiSingle),
-                                    stringResource(R.string.formatRecordingSingle),
-                                    stringResource(R.string.formatRecordingCompilation)) //33, 45, 78RPM, Promo, Limited/Deluxe edition...
-                MyDropdown(stringResource(R.string.musicEntryFormatPhysical), items)
+                MyDropdown(stringResource(R.string.musicEntryFormatRecording),
+                    dropdownRecordingFormatItems,
+                    mutableStateOf(selectedRecordingFormat)) {
+                    newSelection -> selectedRecordingFormat = newSelection
+                }
             }
 
             // date obtained
@@ -183,8 +235,6 @@ fun EditMusicEntryScreen(context: Context,
                 val context = LocalContext.current
                 val calendar = Calendar.getInstance()
 
-                var selectedDateText by remember { mutableStateOf("") }
-
                 // prepare values for the date picker
                 val year: Int
                 val month: Int
@@ -196,16 +246,16 @@ fun EditMusicEntryScreen(context: Context,
                     day = calendar[Calendar.DAY_OF_MONTH]
                 } else {
                     // fetch chosen date
-                    year = musicEntry.dateObtained.year
-                    month = musicEntry.dateObtained.monthValue - 1 // months start at 0
-                    day = musicEntry.dateObtained.dayOfMonth
+                    year = musicEntry.dateObtained!!.year
+                    month = musicEntry.dateObtained!!.monthValue - 1 // months start at 0
+                    day = musicEntry.dateObtained!!.dayOfMonth
                 }
 
                 // open the date picker
                 val datePicker = DatePickerDialog(
                     context,
                     { _: DatePicker, selectedYear: Int, selectedMonth: Int, selectedDay: Int ->
-                        selectedDateText = "$selectedDay/{$selectedMonth}/$selectedYear"
+                        selectedDateObtained = "$selectedDay/{$selectedMonth}/$selectedYear"
                     }, year, month, day
                 )
 
@@ -239,11 +289,10 @@ fun EditMusicEntryScreen(context: Context,
                 Column(
                     horizontalAlignment = Alignment.Start
                 ) {
-                    var value by remember { mutableStateOf(musicEntry.pricePaid.toString()) }
                     TextField(
-                        value = value,
+                        value = selectedPricePaid,
                         onValueChange = {
-                            value = it
+                            selectedPricePaid = it
                         },
                         label = { Text(text = stringResource(R.string.musicEntryPricePaid)) },
                         textStyle = TextStyle(
@@ -266,11 +315,10 @@ fun EditMusicEntryScreen(context: Context,
                     .fillMaxWidth()
                     .padding(10.dp),
             ) {
-                var value by remember { mutableStateOf(musicEntry.notes) }
                 TextField(
-                    value?: ":)", //TODO: ":)" doesn't appear
+                    selectedNotes?: ":)", //TODO: ":)" doesn't appear
                     onValueChange = {
-                        value = it
+                        selectedNotes = it
                     },
                     label = { Text(text = stringResource(R.string.musicEntryExtraNotes)) },
                     textStyle = TextStyle(
@@ -293,10 +341,11 @@ fun EditMusicEntryScreen(context: Context,
 
 @OptIn(ExperimentalMaterial3Api::class) // exposedDropdown is experimental
 @Composable
-fun MyDropdown(label: String, items: Array<String>) { // https://alexzh.com/jetpack-compose-dropdownmenu/
-    val context = LocalContext.current
+// https://alexzh.com/jetpack-compose-dropdownmenu/
+fun MyDropdown(label: String, items: Array<String>,
+               selectedDropdownText: MutableState<String>,
+               onItemSelected: (String) -> Unit) { // https://stackoverflow.com/questions/74248340/changing-the-jetpack-compose-remember-variable-from-within-another-function
     var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf(items[0]) }
 
     Box (
         modifier = Modifier
@@ -311,10 +360,8 @@ fun MyDropdown(label: String, items: Array<String>) { // https://alexzh.com/jetp
         ) {
             TextField(
                 label = { Text(label) },
-                value = selectedText,
-                onValueChange = {
-
-                },
+                value = selectedDropdownText.value,
+                onValueChange = {},
                 readOnly = true,
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 modifier = Modifier.menuAnchor(),
@@ -340,7 +387,8 @@ fun MyDropdown(label: String, items: Array<String>) { // https://alexzh.com/jetp
                     DropdownMenuItem(
                         text = { Text(text = item) },
                         onClick = {
-                            selectedText = item
+                            selectedDropdownText.value = item
+                            onItemSelected(item) // call the callback function with the selected value
                             expanded = false
                         }
                     )
@@ -351,7 +399,11 @@ fun MyDropdown(label: String, items: Array<String>) { // https://alexzh.com/jetp
 }
 
 @Composable
-fun SaveMusicEntryButton(icon: ImageVector, musicEntry: MusicEntry, context: Context) {
+fun SaveMusicEntryButton(icon: ImageVector,
+                         musicEntry: MusicEntry, context: Context, selectedMusicName: String,
+                         selectedArtistName: String, selectedPhysicalFormat: String,
+                         selectedRecordingFormat: String, selectedDateObtained: LocalDate,
+                         selectedPricePaid: Float, selectedNotes: String) {
     FilledIconButton( // https://semicolonspace.com/jetpack-compose-material3-icon-buttons/#filled
         modifier = Modifier
             .width(50.dp)
@@ -361,7 +413,9 @@ fun SaveMusicEntryButton(icon: ImageVector, musicEntry: MusicEntry, context: Con
             containerColor = MaterialTheme.colorScheme.tertiary
         ),
         onClick = {
-            //dispatchAction("Browser", musicEntry, context)
+            saveMusicEntry(musicEntry, context, selectedMusicName,
+                selectedArtistName, selectedPhysicalFormat, selectedRecordingFormat,
+                selectedDateObtained, selectedPricePaid, selectedNotes)
             Toast.makeText(context, "Saved music details!", Toast.LENGTH_SHORT).show()
         }
     ) {
@@ -373,4 +427,19 @@ fun SaveMusicEntryButton(icon: ImageVector, musicEntry: MusicEntry, context: Con
 //            modifier = Modifier.size(30.dp)
         )
     }
+}
+
+fun saveMusicEntry(musicEntry: MusicEntry, context: Context, selectedMusicName: String,
+                   selectedArtistName: String, selectedPhysicalFormat: String,
+                   selectedRecordingFormat: String, selectedDateObtained: LocalDate,
+                   selectedPricePaid: Float, selectedNotes: String) {
+    musicEntry.musicName = selectedMusicName
+    musicEntry.artistName = selectedArtistName
+    musicEntry.physicalFormat = selectedPhysicalFormat
+    musicEntry.recordingFormat = selectedRecordingFormat
+    musicEntry.dateObtained = selectedDateObtained
+    musicEntry.pricePaid = selectedPricePaid
+    musicEntry.notes = selectedNotes
+
+    musicEntry.update(context, musicEntry)
 }

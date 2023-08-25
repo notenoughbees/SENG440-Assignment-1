@@ -12,6 +12,7 @@
     <string name="formatRecordingSingle">Simple</string>
     <string name="formatRecordingCompilation">Compilation</string>
     <string name="musicEntryValueNotGiven">-</string>
+    <string name="musicEntryMusicName">Titre de la musique</string>
     <string name="musicEntryArtistName">Nom d\'artiste</string>
     <string name="musicEntryFormatPhysical">Format physique</string>
     <string name="musicEntryFormatRecording">Format d\'enregistrement</string>

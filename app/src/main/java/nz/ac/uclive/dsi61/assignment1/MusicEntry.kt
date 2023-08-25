@@ -19,21 +19,21 @@ private val sampleData = mutableListOf<MusicEntry>(
     MusicEntry(7, "Flaunt It", "Sigue Sigue Sputnik", "Vinyl", "Album",  LocalDate.of(1986, 1, 1), 12.00f, ""),
     MusicEntry(8, "Greatest Hits Vol. 2", "ABBA", "Vinyl", "Album",  null, null,  ""),
     MusicEntry(9, "Creep", "Radiohead", "Vinyl", "Single",  LocalDate.of(2001, 1, 1), null,  "Jukebox. No sleeve"),
-    MusicEntry(10, "Why Does Love Do This To Me?", "The Exponents", "Tape", "Single",  LocalDate.of(1991, 1, 1), null,  ""),
-    MusicEntry(11, "Human Racing", "Nik Kershaw", "Tape", "Album",  LocalDate.of(1985, 1, 1), null,  ""),
+    MusicEntry(10, "Why Does Love Do This To Me?", "The Exponents", "Cassette", "Single",  LocalDate.of(1991, 1, 1), null,  ""),
+    MusicEntry(11, "Human Racing", "Nik Kershaw", "Cassette", "Album",  LocalDate.of(1985, 1, 1), null,  ""),
     MusicEntry(12, "Careless Whisper", "George Michael", "Vinyl", "Single",  null, null,  "Australian Promo version"),
     MusicEntry(13, "unknown music", "unknown artist", null, null,  null, null, null),
 )
 
 
 class MusicEntry(val id: Int,
-                 val musicName: String,
-                 val artistName: String,
-                 val musicFormat: String?,
-                 val musicType: String?,
-                 val dateObtained: LocalDate?,
-                 val pricePaid: Float?,
-                 val notes: String?) : Comparable<MusicEntry> {
+                 var musicName: String,
+                 var artistName: String,
+                 var physicalFormat: String?,
+                 var recordingFormat: String?,
+                 var dateObtained: LocalDate?,
+                 var pricePaid: Float?,
+                 var notes: String?) : Comparable<MusicEntry> {
     override fun toString() = musicName
 
     // https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/sort.html
@@ -78,7 +78,7 @@ class MusicEntry(val id: Int,
         /**
          * Reads a JSON array.
          */
-        fun readArray(reader: JsonReader) : MutableList<MusicEntry> {
+        private fun readArray(reader: JsonReader) : MutableList<MusicEntry> {
             val musicEntries = mutableListOf<MusicEntry>()
 
             reader.beginArray()
@@ -95,7 +95,7 @@ class MusicEntry(val id: Int,
          * Reads a single JSON value which could be null.
          * Returns the value if it exists, else null.
          */
-        fun parseNullableValue(reader: JsonReader): String? {
+        private fun parseNullableValue(reader: JsonReader): String? {
             val parsedValue: String?
             if (reader.peek() == JsonToken.NULL) {
                 reader.nextNull()
@@ -109,12 +109,12 @@ class MusicEntry(val id: Int,
         /**
          * Reads a single JSON object.
          */
-        fun read(reader: JsonReader) : MusicEntry {
+        private fun read(reader: JsonReader) : MusicEntry {
             var id: Int = -1
             lateinit var musicName: String // lateinit here, then initialise in the when statement
             lateinit var artistName: String
-            var musicFormat: String? = null // lateinit not needed on nullable types since we just init to null
-            var musicType: String? = null
+            var physicalFormat: String? = null // lateinit not needed on nullable types since we just init to null
+            var recordingFormat: String? = null
             var dateObtained: LocalDate? = null
             var pricePaid: Float? = null
             var notes: String? = null
@@ -127,8 +127,8 @@ class MusicEntry(val id: Int,
                     "id" -> id = reader.nextInt()
                     "musicName" -> musicName = reader.nextString()
                     "artistName" -> artistName = reader.nextString()
-                    "musicFormat" -> musicFormat = parseNullableValue(reader)
-                    "musicType" -> musicType = parseNullableValue(reader)
+                    "physicalFormat" -> physicalFormat = parseNullableValue(reader)
+                    "recordingFormat" -> recordingFormat = parseNullableValue(reader)
                     "dateObtained" -> {
                         if (reader.peek() == JsonToken.NULL) {
                             reader.nextNull()
@@ -143,7 +143,7 @@ class MusicEntry(val id: Int,
             }
             reader.endObject()
 //            reader.close()
-            return MusicEntry(id, musicName, artistName, musicFormat, musicType, dateObtained, pricePaid, notes)
+            return MusicEntry(id, musicName, artistName, physicalFormat, recordingFormat, dateObtained, pricePaid, notes)
         }
 
 
@@ -186,12 +186,42 @@ class MusicEntry(val id: Int,
         writer.name("id").value(id)
         writer.name("musicName").value(musicName)
         writer.name("artistName").value(artistName)
-        writer.name("musicFormat").value(musicFormat)
-        writer.name("musicType").value(musicType)
+        writer.name("physicalFormat").value(physicalFormat)
+        writer.name("recordingFormat").value(recordingFormat)
         writer.name("dateObtained").value(if (dateObtained.toString() != "null") dateObtained.toString() else null)
         writer.name("pricePaid").value(pricePaid)
         writer.name("notes").value(notes)
         writer.endObject()
+    }
+
+
+    /**
+     * Updates a single JSON object.
+     */
+    fun update(context: Context, updatedEntry: MusicEntry) {
+        // find the index of the entry to update
+        val musicEntries = readArrayFromFile(context)
+        val indexToUpdate = musicEntries.indexOfFirst {
+            it.id == updatedEntry.id
+        }
+
+        // if entry was found, update it
+        if (indexToUpdate != -1) {
+          musicEntries[indexToUpdate] = updatedEntry
+        }
+
+        // write updated entry to the file
+        val fileName = context.resources.getString(R.string.file)
+        val file = context.openFileOutput(fileName, Context.MODE_PRIVATE)
+        val writer = JsonWriter(OutputStreamWriter(file))
+        writer.setIndent("  ")
+        writer.beginArray()
+        for (musicEntry in musicEntries) {
+            musicEntry.write(writer)
+        }
+
+        writer.endArray()
+        writer.close()
     }
 
 }

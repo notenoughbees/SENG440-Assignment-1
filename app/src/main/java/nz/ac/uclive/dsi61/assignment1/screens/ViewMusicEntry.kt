@@ -82,6 +82,7 @@ fun ViewMusicEntryScreen(context: Context,
                 .padding(top = Constants.TOP_APP_BAR_HEIGHT), // push below appbar
             verticalArrangement = Arrangement.Top,
         ) {
+
             // artist name; search button
             Row(
                 modifier = Modifier
@@ -116,7 +117,7 @@ fun ViewMusicEntryScreen(context: Context,
             ) {
                 Text(
                     text = stringResource(R.string.musicEntryFormatPhysical) + ": " +
-                            (musicEntry.musicFormat
+                            (musicEntry.physicalFormat
                                 ?: stringResource(R.string.musicEntryValueNotGiven)), // elvis expression
                     fontSize = MaterialTheme.typography.bodyMedium.fontSize,
                     fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
@@ -132,7 +133,7 @@ fun ViewMusicEntryScreen(context: Context,
             ) {
                 Text(
                     text = stringResource(R.string.musicEntryFormatRecording) + ": " +
-                            (musicEntry.musicType
+                            (musicEntry.recordingFormat
                                 ?: stringResource(R.string.musicEntryValueNotGiven)),
                     fontSize = MaterialTheme.typography.bodyMedium.fontSize,
                     fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
@@ -186,25 +187,7 @@ fun ViewMusicEntryScreen(context: Context,
                     color = MaterialTheme.colorScheme.secondary
                 )
             }
-
         }
-    }
-}
-
-@Composable
-fun MyButton(label: String, musicEntry: MusicEntry, context: Context) {
-    Button(
-        modifier = Modifier
-            .width(50.dp)
-            .height(50.dp)
-            .aspectRatio(1f), // 1:1 aspect ratio: square button
-        onClick = {
-            dispatchAction("Browser", musicEntry, context)
-        }
-    ) {
-        Text(
-            text = label,
-        )
     }
 }
 
