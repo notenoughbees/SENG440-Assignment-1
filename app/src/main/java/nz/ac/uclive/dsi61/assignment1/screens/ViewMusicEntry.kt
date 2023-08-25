@@ -180,7 +180,7 @@ fun ViewMusicEntryScreen(context: Context,
                     .padding(10.dp),
             ) {
                 Text(
-                    text = stringResource(R.string.musicEntryExtraNotes) + ": " +
+                    text = stringResource(R.string.musicEntryExtraNotes) + ": \n" +
                             (musicEntry.notes ?: stringResource(R.string.musicEntryValueNotGiven)),
                     fontSize = MaterialTheme.typography.bodyMedium.fontSize,
                     fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,

@@ -90,10 +90,10 @@ fun EditMusicEntryScreen(context: Context,
         stringResource(R.string.other)) //33, 45, 78RPM, Promo, Limited/Deluxe edition...
     var selectedMusicName by remember { mutableStateOf(musicEntry.musicName) }
     var selectedArtistName by remember { mutableStateOf(musicEntry.artistName) }
-    var selectedPhysicalFormat by remember { mutableStateOf(musicEntry.physicalFormat?: dropdownPhysicalFormatItems[-1]) } // last item is "Other"
-    var selectedRecordingFormat by remember { mutableStateOf(musicEntry.recordingFormat?: dropdownRecordingFormatItems[-1]) }
-    var selectedDateObtained by remember { mutableStateOf("") }
-    var selectedPricePaid by remember { mutableStateOf(musicEntry.pricePaid.toString()) }
+    var selectedPhysicalFormat by remember { mutableStateOf(musicEntry.physicalFormat?: dropdownPhysicalFormatItems[dropdownPhysicalFormatItems.size -1]) } // last item is "Other"
+    var selectedRecordingFormat by remember { mutableStateOf(musicEntry.recordingFormat?: dropdownRecordingFormatItems[dropdownRecordingFormatItems.size -1]) }
+    var selectedDateObtained by remember { mutableStateOf("") } //TODO: make date not say null when not entered
+    var selectedPricePaid by remember { mutableStateOf(musicEntry.pricePaid) }
     var selectedNotes by remember { mutableStateOf(musicEntry.notes) }
 
     Scaffold(
@@ -192,8 +192,8 @@ fun EditMusicEntryScreen(context: Context,
                 SaveMusicEntryButton(
                     icon = Icons.Filled.Done,
                     musicEntry, context, selectedMusicName,
-                    selectedArtistName, selectedPhysicalFormat, selectedRecordingFormat, //TODO
-                    LocalDate.of(year, month, day), selectedPricePaid.toFloat(),
+                    selectedArtistName, selectedPhysicalFormat, selectedRecordingFormat,
+                    LocalDate.of(year, month, day), selectedPricePaid?: stringResource(R.string.musicEntryValueNotGiven),
                     selectedNotes ?: context.resources.getString(R.string.musicEntryValueNotGiven)
                 )
             }
@@ -261,7 +261,7 @@ fun EditMusicEntryScreen(context: Context,
 
                 Button(
                     onClick = {
-                        datePicker.show()
+                        datePicker.show() //TODO: DATE PICKER CRASHES THE APP WHEN SELECT.
                     },
 //                    modifier = Modifier.fillMaxWidth(),
                     shape = RectangleShape,
@@ -290,7 +290,7 @@ fun EditMusicEntryScreen(context: Context,
                     horizontalAlignment = Alignment.Start
                 ) {
                     TextField(
-                        value = selectedPricePaid,
+                        value = selectedPricePaid?: stringResource(R.string.musicEntryValueNotGiven),
                         onValueChange = {
                             selectedPricePaid = it
                         },
@@ -316,7 +316,7 @@ fun EditMusicEntryScreen(context: Context,
                     .padding(10.dp),
             ) {
                 TextField(
-                    selectedNotes?: ":)", //TODO: ":)" doesn't appear
+                    value = selectedNotes?: stringResource(R.string.musicEntryValueNotGiven),
                     onValueChange = {
                         selectedNotes = it
                     },
@@ -331,7 +331,8 @@ fun EditMusicEntryScreen(context: Context,
                         focusedLabelColor = MaterialTheme.colorScheme.primary,
                         unfocusedLabelColor = MaterialTheme.colorScheme.primary,
                     ),
-                    singleLine = false
+                    singleLine = false,
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
         }
@@ -403,7 +404,7 @@ fun SaveMusicEntryButton(icon: ImageVector,
                          musicEntry: MusicEntry, context: Context, selectedMusicName: String,
                          selectedArtistName: String, selectedPhysicalFormat: String,
                          selectedRecordingFormat: String, selectedDateObtained: LocalDate,
-                         selectedPricePaid: Float, selectedNotes: String) {
+                         selectedPricePaid: String, selectedNotes: String) {
     FilledIconButton( // https://semicolonspace.com/jetpack-compose-material3-icon-buttons/#filled
         modifier = Modifier
             .width(50.dp)
@@ -432,7 +433,7 @@ fun SaveMusicEntryButton(icon: ImageVector,
 fun saveMusicEntry(musicEntry: MusicEntry, context: Context, selectedMusicName: String,
                    selectedArtistName: String, selectedPhysicalFormat: String,
                    selectedRecordingFormat: String, selectedDateObtained: LocalDate,
-                   selectedPricePaid: Float, selectedNotes: String) {
+                   selectedPricePaid: String, selectedNotes: String) {
     musicEntry.musicName = selectedMusicName
     musicEntry.artistName = selectedArtistName
     musicEntry.physicalFormat = selectedPhysicalFormat

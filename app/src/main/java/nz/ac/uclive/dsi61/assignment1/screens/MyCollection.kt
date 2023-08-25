@@ -78,8 +78,7 @@ fun MusicList(musics: MutableList<MusicEntry>, onMusicEntryClick: (MusicEntry) -
             ) {
                 // separate the text into 2 objects so that one line can be bold, the other normal
                 Text(
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.headlineSmall,
                     text = music.musicName,
                     color = MaterialTheme.colorScheme.primary,
                 )
