@@ -92,7 +92,7 @@ fun EditMusicEntryScreen(context: Context,
     var selectedArtistName by remember { mutableStateOf(musicEntry.artistName) }
     var selectedPhysicalFormat by remember { mutableStateOf(musicEntry.physicalFormat?: dropdownPhysicalFormatItems[dropdownPhysicalFormatItems.size -1]) } // last item is "Other"
     var selectedRecordingFormat by remember { mutableStateOf(musicEntry.recordingFormat?: dropdownRecordingFormatItems[dropdownRecordingFormatItems.size -1]) }
-    var selectedDateObtained by remember { mutableStateOf("") } //TODO: make date not say null when not entered
+    var selectedDateObtained by remember { mutableStateOf("") }
     var selectedPricePaid by remember { mutableStateOf(musicEntry.pricePaid) }
     var selectedNotes by remember { mutableStateOf(musicEntry.notes) }
 
@@ -179,6 +179,7 @@ fun EditMusicEntryScreen(context: Context,
                     modifier = Modifier.weight(1f)
                 )
 
+
                 val calendar = Calendar.getInstance()
                 var year = calendar[Calendar.YEAR]
                 var month = calendar[Calendar.MONTH]
@@ -255,13 +256,13 @@ fun EditMusicEntryScreen(context: Context,
                 val datePicker = DatePickerDialog(
                     context,
                     { _: DatePicker, selectedYear: Int, selectedMonth: Int, selectedDay: Int ->
-                        selectedDateObtained = "$selectedDay/{$selectedMonth}/$selectedYear"
+                        selectedDateObtained = "$selectedDay/${selectedMonth + 1}/$selectedYear"
                     }, year, month, day
                 )
 
                 Button(
                     onClick = {
-                        datePicker.show() //TODO: DATE PICKER CRASHES THE APP WHEN SELECT.
+                        datePicker.show()
                     },
 //                    modifier = Modifier.fillMaxWidth(),
                     shape = RectangleShape,
@@ -271,13 +272,28 @@ fun EditMusicEntryScreen(context: Context,
                     )
                 ) {
                     Text(
-                        text = musicEntry.dateObtained.toString(),
+                        text = stringResource(R.string.musicEntryDateObtained) + "\n" +
+                                //TODO: add formatting to button label here
+                                //TODO: add "Remove" button to revert date selection back to null
+
+                        // if a selection has been made in the date picker:
+                        if (selectedDateObtained.isNotEmpty()) {
+                            selectedDateObtained
+                        } else {
+                            // a selection has NOT been made in the date picker yet...
+                            // the previously-saved date for the entry exists:
+                            if (musicEntry.dateObtained != null) {
+                                musicEntry.dateObtained.toString()
+                            // the previously-saved date does NOT exist: the date hasn't been set before:
+                            } else {
+                                stringResource(R.string.musicEntryValueNotGiven)
+                            }
+                        },
                         color = MaterialTheme.colorScheme.secondary,
                         fontSize = MaterialTheme.typography.bodyMedium.fontSize,
                         fontWeight = MaterialTheme.typography.bodyMedium.fontWeight
                     )
                 }
-
             }
 
             // price paid
