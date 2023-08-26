@@ -271,29 +271,47 @@ fun EditMusicEntryScreen(context: Context,
                         containerColor = MaterialTheme.colorScheme.onSurface,
                     )
                 ) {
-                    Text(
-                        text = stringResource(R.string.musicEntryDateObtained) + "\n" +
-                                //TODO: add formatting to button label here
-                                //TODO: add "Remove" button to revert date selection back to null
-
-                        // if a selection has been made in the date picker:
-                        if (selectedDateObtained.isNotEmpty()) {
-                            selectedDateObtained
-                        } else {
-                            // a selection has NOT been made in the date picker yet...
-                            // the previously-saved date for the entry exists:
-                            if (musicEntry.dateObtained != null) {
-                                musicEntry.dateObtained.toString()
-                            // the previously-saved date does NOT exist: the date hasn't been set before:
+                    Column(
+                    ) {
+                        Text(
+                            text = stringResource(R.string.musicEntryDateObtained),
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = MaterialTheme.typography.labelSmall.fontSize,
+                            fontWeight = MaterialTheme.typography.labelSmall.fontWeight
+                        )
+                        Text(
+                            // if a selection has been made in the date picker:
+                            text = if (selectedDateObtained.isNotEmpty()) {
+                                selectedDateObtained
                             } else {
-                                stringResource(R.string.musicEntryValueNotGiven)
-                            }
-                        },
-                        color = MaterialTheme.colorScheme.secondary,
-                        fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-                        fontWeight = MaterialTheme.typography.bodyMedium.fontWeight
-                    )
+                                // a selection has NOT been made in the date picker yet...
+                                // the previously-saved date for the entry exists:
+                                if (musicEntry.dateObtained != null) {
+                                    musicEntry.dateObtained.toString()
+                                    // the previously-saved date does NOT exist: the date hasn't been set before:
+                                } else {
+                                    stringResource(R.string.musicEntryValueNotGiven)
+                                }
+                            },
+                            color = MaterialTheme.colorScheme.secondary,
+                            fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                            fontWeight = MaterialTheme.typography.bodyMedium.fontWeight
+                        )
+                    }
                 }
+                //TODO: add "Remove" button to revert date selection back to null
+//                Button(
+//                    onClick = {
+//                        selectedDateObtained = ""
+//                    }
+//                ) {
+//                    Text (
+//                        text = "Reset date",
+//                        color = MaterialTheme.colorScheme.secondary,
+//                        fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+//                        fontWeight = MaterialTheme.typography.bodyMedium.fontWeight
+//                    )
+//                }
             }
 
             // price paid
