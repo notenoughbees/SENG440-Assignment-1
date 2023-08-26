@@ -121,7 +121,7 @@ fun EditMusicEntryScreen(context: Context,
             verticalArrangement = Arrangement.Top,
         ) {
 
-            // music name
+            // music name; save button
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -145,9 +145,31 @@ fun EditMusicEntryScreen(context: Context,
                         unfocusedLabelColor = MaterialTheme.colorScheme.primary,
                     )
                 )
+                Spacer(
+                    modifier = Modifier.weight(1f)
+                )
+
+                // prepare date for saving
+                val calendar = Calendar.getInstance()
+                var year = calendar[Calendar.YEAR]
+                var month = calendar[Calendar.MONTH]
+                var day = calendar[Calendar.DAY_OF_MONTH]
+                if (selectedDateObtained != "") {
+                    val selectedDateObtainedParts: List<String> = selectedDateObtained.split("/")
+                    day = selectedDateObtainedParts[0].toInt()
+                    month = selectedDateObtainedParts[1].toInt()
+                    year = selectedDateObtainedParts[2].toInt()
+                }
+                SaveMusicEntryButton(
+                    icon = Icons.Filled.Done,
+                    musicEntry, context, selectedMusicName,
+                    selectedArtistName, selectedPhysicalFormat, selectedRecordingFormat,
+                    LocalDate.of(year, month, day), selectedPricePaid?: stringResource(R.string.musicEntryValueNotGiven),
+                    selectedNotes ?: context.resources.getString(R.string.musicEntryValueNotGiven)
+                )
             }
 
-            // artist name; save button
+            // artist name
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -175,28 +197,6 @@ fun EditMusicEntryScreen(context: Context,
                         )
                     )
                 }
-                Spacer(
-                    modifier = Modifier.weight(1f)
-                )
-
-
-                val calendar = Calendar.getInstance()
-                var year = calendar[Calendar.YEAR]
-                var month = calendar[Calendar.MONTH]
-                var day = calendar[Calendar.DAY_OF_MONTH]
-                if (selectedDateObtained != "") {
-                    val selectedDateObtainedParts: List<String> = selectedDateObtained.split("/")
-                    day = selectedDateObtainedParts[0].toInt()
-                    month = selectedDateObtainedParts[1].toInt()
-                    year = selectedDateObtainedParts[2].toInt()
-                }
-                SaveMusicEntryButton(
-                    icon = Icons.Filled.Done,
-                    musicEntry, context, selectedMusicName,
-                    selectedArtistName, selectedPhysicalFormat, selectedRecordingFormat,
-                    LocalDate.of(year, month, day), selectedPricePaid?: stringResource(R.string.musicEntryValueNotGiven),
-                    selectedNotes ?: context.resources.getString(R.string.musicEntryValueNotGiven)
-                )
             }
 
             // physical format
@@ -256,6 +256,7 @@ fun EditMusicEntryScreen(context: Context,
                 val datePicker = DatePickerDialog(
                     context,
                     { _: DatePicker, selectedYear: Int, selectedMonth: Int, selectedDay: Int ->
+                        //TODO: fix date format switching between D/M/Y & Y-M-D
                         selectedDateObtained = "$selectedDay/${selectedMonth + 1}/$selectedYear"
                     }, year, month, day
                 )
