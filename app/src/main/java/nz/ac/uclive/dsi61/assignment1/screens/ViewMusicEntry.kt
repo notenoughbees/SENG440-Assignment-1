@@ -5,6 +5,13 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.util.JsonReader
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -31,12 +38,21 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import nz.ac.uclive.dsi61.assignment1.Constants
 import nz.ac.uclive.dsi61.assignment1.MusicEntry
 import nz.ac.uclive.dsi61.assignment1.R
@@ -56,6 +72,18 @@ fun ViewMusicEntryScreen(context: Context,
     val file = context.openFileInput(fileName)
     val reader = JsonReader(InputStreamReader(file))
     val musicEntry = MusicEntry.readAtIndex(reader, musicEntryId)
+
+    var buttonVisible by remember { mutableStateOf(true) }
+    var ANIMATION_DURATION = 2000L
+    // make the button reappear after a delay (otherwise, it will stay invisible after clicking it the first time!)
+    LaunchedEffect(buttonVisible) {
+        if (!buttonVisible) {
+            // via exit animation, button becomes invisible
+            delay(ANIMATION_DURATION) // wait after the exit animation
+            buttonVisible = true // make button appear again: trigger the enter animation
+        }
+    }
+
 
     Scaffold(
         topBar = {
@@ -102,11 +130,33 @@ fun ViewMusicEntryScreen(context: Context,
                 Spacer( // push the button to the right side of the screen
                     modifier = Modifier.weight(1f)
                 )
-                SearchBrowserButton(
-                    icon = Icons.Filled.Search,
-                    musicEntry,
-                    context
-                )
+
+                // https://developer.android.com/jetpack/compose/animation/composables-modifiers#built-in_animated_composables
+                val density = LocalDensity.current
+                AnimatedVisibility(
+                    visible = buttonVisible,
+                    enter = slideInVertically {
+                        // Slide in from 40 dp from the top.
+                        with(density) { -40.dp.roundToPx() }
+                    } + expandVertically(
+                        // Expand from the top.
+                        expandFrom = Alignment.Top
+                    ) + fadeIn(
+                        // Fade in with the initial alpha of 0.3f.
+                        initialAlpha = 0.3f
+                    ),
+                    exit = slideOutVertically() + shrinkVertically() + fadeOut()
+                ) {
+                    SearchBrowserButton(
+                        icon = Icons.Filled.Search,
+                        musicEntry,
+                        context,
+                        buttonVisible
+                    ) {
+                        newVisibility -> buttonVisible = newVisibility
+                    }
+                }
+
             }
 
             // physical format
@@ -192,7 +242,8 @@ fun ViewMusicEntryScreen(context: Context,
 }
 
 @Composable
-fun SearchBrowserButton(icon: ImageVector, musicEntry: MusicEntry, context: Context) {
+fun SearchBrowserButton(icon: ImageVector, musicEntry: MusicEntry, context: Context,
+                        visible: Boolean, onButtonClicked: (Boolean) -> Unit) {
     FilledIconButton( // https://semicolonspace.com/jetpack-compose-material3-icon-buttons/#filled
         modifier = Modifier
             .width(50.dp)
@@ -202,6 +253,7 @@ fun SearchBrowserButton(icon: ImageVector, musicEntry: MusicEntry, context: Cont
             containerColor = MaterialTheme.colorScheme.tertiary
         ),
         onClick = {
+            onButtonClicked(!visible)
             dispatchAction("Browser", musicEntry, context)
         }
     ) {

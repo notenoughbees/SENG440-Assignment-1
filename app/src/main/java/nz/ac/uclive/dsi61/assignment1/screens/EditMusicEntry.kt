@@ -161,10 +161,12 @@ fun EditMusicEntryScreen(context: Context,
                     year = selectedDateObtainedParts[2].toInt()
                 }
                 SaveMusicEntryButton(
-                    icon = Icons.Filled.Done,
-                    musicEntry, context, selectedMusicName,
-                    selectedArtistName, selectedPhysicalFormat, selectedRecordingFormat,
-                    LocalDate.of(year, month, day), selectedPricePaid?: stringResource(R.string.musicEntryValueNotGiven),
+                    navController, Icons.Filled.Done,
+                    musicEntry, musicEntryId,
+                    context, selectedMusicName,
+                    selectedArtistName, selectedPhysicalFormat,
+                    selectedRecordingFormat, LocalDate.of(year, month, day),
+                    selectedPricePaid?: stringResource(R.string.musicEntryValueNotGiven),
                     selectedNotes ?: context.resources.getString(R.string.musicEntryValueNotGiven)
                 )
             }
@@ -289,7 +291,7 @@ fun EditMusicEntryScreen(context: Context,
                                 // the previously-saved date for the entry exists:
                                 if (musicEntry.dateObtained != null) {
                                     musicEntry.dateObtained.toString()
-                                    // the previously-saved date does NOT exist: the date hasn't been set before:
+                                // the previously-saved date does NOT exist: the date hasn't been set before:
                                 } else {
                                     stringResource(R.string.musicEntryValueNotGiven)
                                 }
@@ -435,8 +437,9 @@ fun MyDropdown(label: String, items: Array<String>,
 }
 
 @Composable
-fun SaveMusicEntryButton(icon: ImageVector,
-                         musicEntry: MusicEntry, context: Context, selectedMusicName: String,
+fun SaveMusicEntryButton(navController: NavController, icon: ImageVector,
+                         musicEntry: MusicEntry, musicEntryId: Int,
+                         context: Context, selectedMusicName: String,
                          selectedArtistName: String, selectedPhysicalFormat: String,
                          selectedRecordingFormat: String, selectedDateObtained: LocalDate,
                          selectedPricePaid: String, selectedNotes: String) {
@@ -452,6 +455,7 @@ fun SaveMusicEntryButton(icon: ImageVector,
             saveMusicEntry(musicEntry, context, selectedMusicName,
                 selectedArtistName, selectedPhysicalFormat, selectedRecordingFormat,
                 selectedDateObtained, selectedPricePaid, selectedNotes)
+            navController.navigate(Screens.ViewMusicEntry.passId(musicEntryId))
             Toast.makeText(context, "Saved music details!", Toast.LENGTH_SHORT).show()
         }
     ) {
