@@ -6,9 +6,12 @@ import android.content.Context
 import android.content.Intent
 import android.util.JsonReader
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -60,7 +63,7 @@ import nz.ac.uclive.dsi61.assignment1.navigation.Screens
 import java.io.InputStreamReader
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ViewMusicEntryScreen(context: Context,
@@ -146,6 +149,16 @@ fun ViewMusicEntryScreen(context: Context,
                         initialAlpha = 0.3f
                     ),
                     exit = slideOutVertically() + shrinkVertically() + fadeOut()
+
+                    // only shrink the button (requires ExperimentalAnimationApi)
+//                AnimatedVisibility(
+//                    visible = buttonVisible,
+//                    enter = scaleIn() + fadeIn(
+//                        // Fade in with the initial alpha of 0.3f.
+//                        initialAlpha = 0.3f
+//                    ),
+//                    exit = scaleOut() + fadeOut()
+
                 ) {
                     SearchBrowserButton(
                         icon = Icons.Filled.Search,
