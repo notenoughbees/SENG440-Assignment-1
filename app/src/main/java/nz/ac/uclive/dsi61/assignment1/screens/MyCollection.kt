@@ -60,6 +60,7 @@ fun MyCollectionScreen(navController: NavController) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MusicList(musics: MutableList<MusicEntry>, onMusicEntryClick: (MusicEntry) -> Unit) {
+    //TODO: case-insenstive sorting
     musics.sort() // https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/sort.html
     LazyColumn (
         // in material 3, the top bar overlaps the content by default,

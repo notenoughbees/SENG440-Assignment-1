@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.util.JsonReader
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -52,6 +53,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -73,13 +75,16 @@ fun ViewMusicEntryScreen(context: Context,
                          musicEntryId: Int
                          ) {
     println("ViewMusicEntryScreen")
+    val configuration = LocalConfiguration.current
+    val IS_LANDSCAPE = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
     val fileName = context.resources.getString(R.string.file)
     val file = context.openFileInput(fileName)
     val reader = JsonReader(InputStreamReader(file))
     val musicEntry = MusicEntry.readAtIndex(reader, musicEntryId)
 
     var buttonVisible by remember { mutableStateOf(true) }
-    var ANIMATION_DURATION = 2000L
+    val ANIMATION_DURATION = 2000L
     // make the button reappear after a delay (otherwise, it will stay invisible after clicking it the first time!)
     LaunchedEffect(buttonVisible) {
         if (!buttonVisible) {
@@ -117,7 +122,7 @@ fun ViewMusicEntryScreen(context: Context,
             verticalArrangement = Arrangement.Top,
         ) {
 
-            // artist name; search button
+            // ROW 1: artist name, search button
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -133,6 +138,7 @@ fun ViewMusicEntryScreen(context: Context,
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
+
                 Spacer( // push the button to the right side of the screen
                     modifier = Modifier.weight(1f)
                 )
@@ -172,86 +178,96 @@ fun ViewMusicEntryScreen(context: Context,
                         newVisibility -> buttonVisible = newVisibility
                     }
                 }
-
             }
 
-            // physical format
+            // ROW 2: all other elements [incl extra notes if portrait]
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp),
             ) {
-                Text(
-                    text = stringResource(R.string.musicEntryFormatPhysical) + ": " +
-                            (musicEntry.physicalFormat
-                                ?: stringResource(R.string.musicEntryValueNotGiven)), // elvis expression
-                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-                    fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
-                    color = MaterialTheme.colorScheme.secondary
-                )
-            }
+                // COLUMN 1: formats, date obtained, price paid
+                Column(
+                    modifier = Modifier
+                        .weight(0.5f)
+                ) {
+                    // physical format
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp),
+                    ) {
+                        Text(
+                            text = stringResource(R.string.musicEntryFormatPhysical) + ": " +
+                                    (musicEntry.physicalFormat
+                                        ?: stringResource(R.string.musicEntryValueNotGiven)), // elvis expression
+                            fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                            fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+                            color = MaterialTheme.colorScheme.secondary
+                        )
+                    }
 
-            // recording format
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp),
-            ) {
-                Text(
-                    text = stringResource(R.string.musicEntryFormatRecording) + ": " +
-                            (musicEntry.recordingFormat
-                                ?: stringResource(R.string.musicEntryValueNotGiven)),
-                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-                    fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
-                    color = MaterialTheme.colorScheme.secondary
-                )
-            }
+                    // recording format
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp),
+                    ) {
+                        Text(
+                            text = stringResource(R.string.musicEntryFormatRecording) + ": " +
+                                    (musicEntry.recordingFormat
+                                        ?: stringResource(R.string.musicEntryValueNotGiven)),
+                            fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                            fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+                            color = MaterialTheme.colorScheme.secondary
+                        )
+                    }
 
-            // date obtained
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp),
-            ) {
-                Text(
-                    text = stringResource(R.string.musicEntryDateObtained) + ": " +
-                            (musicEntry.dateObtained
-                                ?: stringResource(R.string.musicEntryValueNotGiven)),
-                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-                    fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
-                    color = MaterialTheme.colorScheme.secondary
-                )
-            }
+                    // date obtained
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp),
+                    ) {
+                        Text(
+                            text = stringResource(R.string.musicEntryDateObtained) + ": " +
+                                    (musicEntry.dateObtained
+                                        ?: stringResource(R.string.musicEntryValueNotGiven)),
+                            fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                            fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+                            color = MaterialTheme.colorScheme.secondary
+                        )
+                    }
 
-            // price paid
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp),
-            ) {
-                Text(
-                    text = stringResource(R.string.musicEntryPricePaid) + ": " +
-                            (musicEntry.pricePaid
-                                ?: stringResource(R.string.musicEntryValueNotGiven)),
-                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-                    fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
-                    color = MaterialTheme.colorScheme.secondary
-                )
-            }
+                    // price paid
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp),
+                    ) {
+                        Text(
+                            text = stringResource(R.string.musicEntryPricePaid) + ": " +
+                                    (musicEntry.pricePaid
+                                        ?: stringResource(R.string.musicEntryValueNotGiven)),
+                            fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                            fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+                            color = MaterialTheme.colorScheme.secondary
+                        )
+                    }
 
-            // extra notes
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp),
-            ) {
-                Text(
-                    text = stringResource(R.string.musicEntryExtraNotes) + ": \n" +
-                            (musicEntry.notes ?: stringResource(R.string.musicEntryValueNotGiven)),
-                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-                    fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
-                    color = MaterialTheme.colorScheme.secondary
-                )
+                    // extra notes
+                    if(!IS_LANDSCAPE) { // if portrait, all fields display in one column
+                        extraNotesText(musicEntry)
+                    }
+                }
+
+                // COLUMN 2: extra notes [if landscape]
+                if(IS_LANDSCAPE) { // if landscape, the notes field displays to the right, in a separate column
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(0.5f)
+                    ) {
+                        extraNotesText(musicEntry)
+                    }
+                }
             }
         }
     }
@@ -270,7 +286,7 @@ fun SearchBrowserButton(icon: ImageVector, musicEntry: MusicEntry, context: Cont
         ),
         onClick = {
             onButtonClicked(!visible)
-            dispatchAction("Browser", musicEntry, context)
+            dispatchAction(musicEntry, context)
         }
     ) {
         Icon(
@@ -283,24 +299,26 @@ fun SearchBrowserButton(icon: ImageVector, musicEntry: MusicEntry, context: Cont
     }
 }
 
-private fun dispatchAction(option: String, musicEntry: MusicEntry, context: Context): Unit {
-    when (option) {
-        // https://developer.android.com/reference/android/content/Intent#ACTION_WEB_SEARCH
-        "Browser" -> {
-            val intent = Intent(Intent.ACTION_WEB_SEARCH)
-            intent.putExtra(SearchManager.QUERY, musicEntry.artistName + " " + musicEntry.musicName)
-            context.startActivity(intent)
-        }
-//        "Map" -> {
-//            val uri = Uri.parse("geo:0,0?q=${URLEncoder.encode(friend.home, "UTF-8")}")
-//            val intent = Intent(Intent.ACTION_VIEW, uri)
-//            startActivity(intent)
-//        }
-//        "Email" -> {
-//            val intent = Intent(Intent.ACTION_SEND)
-//            intent.type = "text/plain"
-//            intent.putExtra(Intent.EXTRA_EMAIL, friend.email)
-//            startActivity(intent)
-//        }
+private fun dispatchAction(musicEntry: MusicEntry, context: Context) {
+    // https://developer.android.com/reference/android/content/Intent#ACTION_WEB_SEARCH
+    val intent = Intent(Intent.ACTION_WEB_SEARCH)
+    intent.putExtra(SearchManager.QUERY, musicEntry.artistName + " " + musicEntry.musicName)
+    context.startActivity(intent)
+}
+
+@Composable
+private fun extraNotesText(musicEntry: MusicEntry) {
+    println("extraNotesText - running")
+    Row(
+        modifier = Modifier
+            .padding(10.dp),
+    ) {
+        Text(
+            text = stringResource(R.string.musicEntryExtraNotes) + ": \n" +
+                    (musicEntry.notes ?: stringResource(R.string.musicEntryValueNotGiven)),
+            fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+            fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+            color = MaterialTheme.colorScheme.secondary
+        )
     }
 }
