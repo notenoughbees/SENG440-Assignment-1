@@ -46,7 +46,8 @@ fun MyCollectionScreen(navController: NavController) {
         }
     ) {
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
         ) {
             MusicList(musicEntries) { music ->
                 navController.navigate(Screens.ViewMusicEntry.passId(music.id))
@@ -65,7 +66,9 @@ fun MusicList(musics: MutableList<MusicEntry>, onMusicEntryClick: (MusicEntry) -
         // so we must add top padding to the content to push it down
 
         // make the music list start below the app bar so it doesn't get covered
-        modifier = Modifier.padding(top = TOP_APP_BAR_HEIGHT)
+        modifier = Modifier
+            .fillMaxSize() // makes list scrollable in landscape mode
+            .padding(top = TOP_APP_BAR_HEIGHT)
     ) {
         items(musics) { music ->
             // Styling for an individual item in the list
