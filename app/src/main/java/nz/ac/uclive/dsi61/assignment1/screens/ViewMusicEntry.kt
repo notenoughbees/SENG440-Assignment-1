@@ -5,6 +5,8 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.media.AudioManager
+import android.media.ToneGenerator
 import android.util.JsonReader
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -94,6 +96,11 @@ fun ViewMusicEntryScreen(context: Context,
         }
     }
 
+//    val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+//    val currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM)
+//    val toner = ToneGenerator(AudioManager.STREAM_ALARM, currentVolume)
+    val toner = ToneGenerator(AudioManager.STREAM_ALARM, ToneGenerator.MAX_VOLUME)
+
 
     Scaffold(
         topBar = {
@@ -102,6 +109,7 @@ fun ViewMusicEntryScreen(context: Context,
                 // https://foso.github.io/Jetpack-Compose-Playground/material/topappbar/
                 navigationIcon = {
                     IconButton(onClick = {
+                        toner.startTone(ToneGenerator.TONE_PROP_BEEP, 500)
                         navController.navigate(Screens.EditMusicEntry.passId(musicEntryId))
                     }) {
                         Icon(Icons.Filled.Edit, null)
@@ -173,7 +181,8 @@ fun ViewMusicEntryScreen(context: Context,
                         icon = Icons.Filled.Search,
                         musicEntry,
                         context,
-                        buttonVisible
+                        buttonVisible,
+                        toner
                     ) {
                         newVisibility -> buttonVisible = newVisibility
                     }
@@ -254,7 +263,7 @@ fun ViewMusicEntryScreen(context: Context,
 
                     // extra notes
                     if(!IS_LANDSCAPE) { // if portrait, all fields display in one column
-                        extraNotesText(musicEntry)
+                        ExtraNotesText(musicEntry)
                     }
                 }
 
@@ -265,7 +274,7 @@ fun ViewMusicEntryScreen(context: Context,
                             .fillMaxWidth()
                             .weight(0.5f)
                     ) {
-                        extraNotesText(musicEntry)
+                        ExtraNotesText(musicEntry)
                     }
                 }
             }
@@ -275,7 +284,7 @@ fun ViewMusicEntryScreen(context: Context,
 
 @Composable
 fun SearchBrowserButton(icon: ImageVector, musicEntry: MusicEntry, context: Context,
-                        visible: Boolean, onButtonClicked: (Boolean) -> Unit) {
+                        visible: Boolean, toner: ToneGenerator, onButtonClicked: (Boolean) -> Unit) {
     FilledIconButton( // https://semicolonspace.com/jetpack-compose-material3-icon-buttons/#filled
         modifier = Modifier
             .width(50.dp)
@@ -285,6 +294,7 @@ fun SearchBrowserButton(icon: ImageVector, musicEntry: MusicEntry, context: Cont
             containerColor = MaterialTheme.colorScheme.tertiary
         ),
         onClick = {
+            toner.startTone(ToneGenerator.TONE_PROP_BEEP, 500)
             onButtonClicked(!visible)
             dispatchAction(musicEntry, context)
         }
@@ -307,8 +317,7 @@ private fun dispatchAction(musicEntry: MusicEntry, context: Context) {
 }
 
 @Composable
-private fun extraNotesText(musicEntry: MusicEntry) {
-    println("extraNotesText - running")
+private fun ExtraNotesText(musicEntry: MusicEntry) {
     Row(
         modifier = Modifier
             .padding(10.dp),

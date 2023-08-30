@@ -3,6 +3,9 @@ package nz.ac.uclive.dsi61.assignment1.screens
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Context
+import android.media.AudioManager
+import android.media.ToneGenerator
+import android.media.ToneGenerator.MAX_VOLUME
 import android.util.JsonReader
 import android.widget.DatePicker
 import android.widget.Toast
@@ -77,6 +80,11 @@ fun EditMusicEntryScreen(context: Context,
     val reader = JsonReader(InputStreamReader(file))
     val musicEntry = MusicEntry.readAtIndex(reader, musicEntryId)
 
+//    val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+//    val currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM)
+//    val toner = ToneGenerator(AudioManager.STREAM_ALARM, currentVolume)
+    val toner = ToneGenerator(AudioManager.STREAM_ALARM, MAX_VOLUME)
+
     // fields to update when clicking the save button
     val dropdownPhysicalFormatItems = arrayOf(stringResource(R.string.formatPhysicalCD),
         stringResource(R.string.formatPhysicalCassette),
@@ -104,6 +112,7 @@ fun EditMusicEntryScreen(context: Context,
                 title = { Text(musicEntry.musicName) },
                 navigationIcon = {
                     IconButton(onClick = {
+                        toner.startTone(ToneGenerator.TONE_PROP_BEEP, 500)
                         navController.navigate(Screens.ViewMusicEntry.passId(musicEntryId))
                     }) {
                         Icon(Icons.Filled.List, null)
@@ -170,7 +179,8 @@ fun EditMusicEntryScreen(context: Context,
                     selectedArtistName, selectedPhysicalFormat,
                     selectedRecordingFormat, LocalDate.of(year, month, day),
                     selectedPricePaid?: stringResource(R.string.musicEntryValueNotGiven),
-                    selectedNotes ?: context.resources.getString(R.string.musicEntryValueNotGiven)
+                    selectedNotes ?: context.resources.getString(R.string.musicEntryValueNotGiven),
+                    toner
                 )
             }
 
@@ -446,7 +456,8 @@ fun SaveMusicEntryButton(navController: NavController, icon: ImageVector,
                          context: Context, selectedMusicName: String,
                          selectedArtistName: String, selectedPhysicalFormat: String,
                          selectedRecordingFormat: String, selectedDateObtained: LocalDate,
-                         selectedPricePaid: String, selectedNotes: String) {
+                         selectedPricePaid: String, selectedNotes: String,
+                         toner: ToneGenerator) {
     FilledIconButton( // https://semicolonspace.com/jetpack-compose-material3-icon-buttons/#filled
         modifier = Modifier
             .width(50.dp)
@@ -456,6 +467,8 @@ fun SaveMusicEntryButton(navController: NavController, icon: ImageVector,
             containerColor = MaterialTheme.colorScheme.tertiary
         ),
         onClick = {
+            toner.startTone(ToneGenerator.TONE_PROP_BEEP, 500)
+
             saveMusicEntry(musicEntry, context, selectedMusicName,
                 selectedArtistName, selectedPhysicalFormat, selectedRecordingFormat,
                 selectedDateObtained, selectedPricePaid, selectedNotes)
