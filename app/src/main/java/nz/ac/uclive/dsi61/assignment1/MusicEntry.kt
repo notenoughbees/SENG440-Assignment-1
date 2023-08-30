@@ -10,20 +10,20 @@ import java.io.OutputStreamWriter
 import java.time.LocalDate
 
 private val sampleData = mutableListOf<MusicEntry>(
-    MusicEntry(1, "Folie à Deux", "Fall Out Boy", "CD", "Album",  LocalDate.of(2022, 9, 30), "5", "Digipak.\n\nthe australasian release with the extra songs. played this for mum: she doesn't like their cover of michael jackson's beat it so we didn't finish this one."),
-    MusicEntry(2, "Hesitant Alien", "Gerard Way", "CD", "Album",  LocalDate.of(2022, 11, 16), "15", "Comes with poster"),
-    MusicEntry(3, "Midnights", "Taylor Swift", "CD", "Album",  LocalDate.of(2022, 11, 16), "19.99", "Bought new :)\n\nme warning my mum about the album: \"btw she says swear words now\"\n\nmum: \"taylor swift does NOT swear!!!\""),
-    MusicEntry(4, "Cotton Eye Joe", "Rednex", "CD", "Single",  LocalDate.of(2022, 11, 16), "0.25", "comes with 4 remixes of cotton eye joe plus original song. mum says that is 5 songs too many."),
-    MusicEntry(5, "Fantasies & Delusions", "Billy Joel", "CD", "Album",  LocalDate.of(2023, 8, 10), "1.95", null),
-    MusicEntry(6, "California Flash", "Billy Joel", "Vinyl", "Compilation",  LocalDate.of(1988, 1, 1), "10.00", "this is in my mum's collection, she says this record really disappointed her because this is billy's early stuff where he did thrash metal and she doesn't like that. it turns out though that this record is rare because it was only ever released in new zealand, unlike his other records. i hope this description is long enough now"),
-    MusicEntry(7, "Flaunt It", "Sigue Sigue Sputnik", "Vinyl", "Album",  LocalDate.of(1986, 1, 1), "12.00", "dad: \"that'll be worth a lot of money you gotta find out how much this is worth\"\n\ndiscogs.com: \"median price is 16 dollars\""),
-    MusicEntry(8, "Greatest Hits Vol. 2", "ABBA", "Vinyl", "Album",  null, null,  null),
-    MusicEntry(9, "Creep", "Radiohead", "Vinyl", "Single",  LocalDate.of(2001, 1, 1), null,  "Jukebox. No sleeve"),
-    MusicEntry(10, "Why Does Love Do This To Me?", "The Exponents", "Cassette", "Single",  LocalDate.of(1991, 1, 1), null,  null),
-    MusicEntry(11, "Human Racing", "Nik Kershaw", "Cassette", "Album",  LocalDate.of(1985, 1, 1), null,  null),
-    MusicEntry(12, "Careless Whisper", "George Michael", "Vinyl", "Single",  null, null,  "Australian Promo version"),
-    MusicEntry(13, "unknown music test", "unknown artist", null, null,  null, null, null),
-    MusicEntry(14, "long music test", "long artist", "CD", "Album",  LocalDate.of(2023, 8, 29), "0.00", "What is Lorem Ipsum?\n" +
+    MusicEntry(1, "Folie à Deux", "Fall Out Boy", "CD", "Album",  LocalDate.of(2022, 9, 30), "New Zealand", "5", "Digipak.\n\nthe australasian release with the extra songs. played this for mum: she doesn't like their cover of michael jackson's beat it so we didn't finish this one."),
+    MusicEntry(2, "Hesitant Alien", "Gerard Way", "CD", "Album",  LocalDate.of(2022, 11, 16), "Penny Lane","15", "Comes with poster"),
+    MusicEntry(3, "Midnights", "Taylor Swift", "CD", "Album",  LocalDate.of(2022, 11, 16), "JB HiFi Chch", "19.99", "Bought new :)\n\nme warning my mum about the album: \"btw she says swear words now\"\n\nmum: \"taylor swift does NOT swear!!!\""),
+    MusicEntry(4, "Cotton Eye Joe", "Rednex", "CD", "Single",  LocalDate.of(2022, 11, 16), null, "0.25", "comes with 4 remixes of cotton eye joe plus original song. mum says that is 5 songs too many."),
+    MusicEntry(5, "Fantasies & Delusions", "Billy Joel", "CD", "Album",  LocalDate.of(2023, 8, 10), "UK", "1.95", null),
+    MusicEntry(6, "California Flash", "Billy Joel", "Vinyl", "Compilation",  LocalDate.of(1988, 1, 1), "New Zealand", "10.00", "this is in my mum's collection, she says this record really disappointed her because this is billy's early stuff where he did thrash metal and she doesn't like that. it turns out though that this record is rare because it was only ever released in new zealand, unlike his other records. i hope this description is long enough now"),
+    MusicEntry(7, "Flaunt It", "Sigue Sigue Sputnik", "Vinyl", "Album",  LocalDate.of(1986, 1, 1), null, "12.00", "dad: \"that'll be worth a lot of money you gotta find out how much this is worth\"\n\ndiscogs.com: \"median price is 16 dollars\""),
+    MusicEntry(8, "Greatest Hits Vol. 2", "ABBA", "Vinyl", "Album",  null, null, null,  null),
+    MusicEntry(9, "Creep", "Radiohead", "Vinyl", "Single",  LocalDate.of(2001, 1, 1), null, null,  "Jukebox. No sleeve"),
+    MusicEntry(10, "Why Does Love Do This To Me?", "The Exponents", "Cassette", "Single",  LocalDate.of(1991, 1, 1), null, null,  null),
+    MusicEntry(11, "Human Racing", "Nik Kershaw", "Cassette", "Album",  LocalDate.of(1985, 1, 1), null, null,  null),
+    MusicEntry(12, "Careless Whisper", "George Michael", "Vinyl", "Single",  null, null, null,  "Australian Promo version"),
+    MusicEntry(13, "unknown music test", "unknown artist", null, null,  null, null, null, null),
+    MusicEntry(14, "long music test", "long artist", "CD", "Album",  LocalDate.of(2023, 8, 29), null, "0.00", "What is Lorem Ipsum?\n" +
             "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.\n" +
             "\n" +
             "Why do we use it?\n" +
@@ -45,6 +45,7 @@ class MusicEntry(val id: Int,
                  var physicalFormat: String?,
                  var recordingFormat: String?,
                  var dateObtained: LocalDate?,
+                 var whereObtained: String?,
                  var pricePaid: String?,
                  var notes: String?) : Comparable<MusicEntry> {
     override fun toString() = musicName
@@ -129,6 +130,7 @@ class MusicEntry(val id: Int,
             var physicalFormat: String? = null // lateinit not needed on nullable types since we just init to null
             var recordingFormat: String? = null
             var dateObtained: LocalDate? = null
+            var whereObtained: String? = null
             var pricePaid: String? = null
             var notes: String? = null
 
@@ -150,13 +152,14 @@ class MusicEntry(val id: Int,
                             dateObtained = LocalDate.parse(reader.nextString())
                         }
                     }
+                    "whereObtained" -> whereObtained = parseNullableValue(reader)
                     "pricePaid" -> pricePaid = parseNullableValue(reader)
                     "notes" -> notes = parseNullableValue(reader)
                 }
             }
             reader.endObject()
 //            reader.close()
-            return MusicEntry(id, musicName, artistName, physicalFormat, recordingFormat, dateObtained, pricePaid, notes)
+            return MusicEntry(id, musicName, artistName, physicalFormat, recordingFormat, dateObtained, whereObtained, pricePaid, notes)
         }
 
 
@@ -202,6 +205,7 @@ class MusicEntry(val id: Int,
         writer.name("physicalFormat").value(physicalFormat)
         writer.name("recordingFormat").value(recordingFormat)
         writer.name("dateObtained").value(if (dateObtained.toString() != "null") dateObtained.toString() else null)
+        writer.name("whereObtained").value(whereObtained)
         writer.name("pricePaid").value(pricePaid)
         writer.name("notes").value(notes)
         writer.endObject()

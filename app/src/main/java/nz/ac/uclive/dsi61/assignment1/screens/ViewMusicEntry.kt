@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.media.AudioManager
 import android.media.ToneGenerator
+import android.net.Uri
 import android.util.JsonReader
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -33,8 +34,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
@@ -67,6 +68,7 @@ import nz.ac.uclive.dsi61.assignment1.MusicEntry
 import nz.ac.uclive.dsi61.assignment1.R
 import nz.ac.uclive.dsi61.assignment1.navigation.Screens
 import java.io.InputStreamReader
+import java.net.URLEncoder
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
@@ -177,12 +179,13 @@ fun ViewMusicEntryScreen(context: Context,
 //                    exit = scaleOut() + fadeOut()
 
                 ) {
-                    SearchBrowserButton(
+                    PrimaryButton(
                         icon = Icons.Filled.Search,
                         musicEntry,
                         context,
                         buttonVisible,
-                        toner
+                        toner,
+                        "Search"
                     ) {
                         newVisibility -> buttonVisible = newVisibility
                     }
@@ -192,7 +195,7 @@ fun ViewMusicEntryScreen(context: Context,
             // ROW 2: all other elements [incl extra notes if portrait]
             Row(
             ) {
-                // COLUMN 1: formats, date obtained, price paid
+                // COLUMN 1: formats, date obtained, where obtained, price paid
                 Column(
                     modifier = Modifier
                         .weight(0.5f)
@@ -245,6 +248,41 @@ fun ViewMusicEntryScreen(context: Context,
                         )
                     }
 
+                    // where obtained
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp),
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.Start
+                        ) {
+                            Text(
+                                text = stringResource(R.string.musicEntryWhereObtained) + ": " +
+                                        (musicEntry.whereObtained
+                                            ?: stringResource(R.string.musicEntryValueNotGiven)),
+                                fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                                fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+                                color = MaterialTheme.colorScheme.secondary
+                            )
+                        }
+
+                        Spacer( // push the button to the right side of the screen
+                            modifier = Modifier.weight(1f)
+                        )
+
+                        PrimaryButton(
+                            icon = Icons.Filled.LocationOn,
+                            musicEntry,
+                            context,
+                            buttonVisible,
+                            toner,
+                            "Map"
+                        ) {
+                            newVisibility -> buttonVisible = newVisibility
+                        }
+                    }
+
                     // price paid
                     Row(
                         modifier = Modifier
@@ -283,8 +321,9 @@ fun ViewMusicEntryScreen(context: Context,
 }
 
 @Composable
-fun SearchBrowserButton(icon: ImageVector, musicEntry: MusicEntry, context: Context,
-                        visible: Boolean, toner: ToneGenerator, onButtonClicked: (Boolean) -> Unit) {
+fun PrimaryButton(icon: ImageVector, musicEntry: MusicEntry, context: Context,
+                        visible: Boolean, toner: ToneGenerator, action: String,
+                        onButtonClicked: (Boolean) -> Unit) {
     FilledIconButton( // https://semicolonspace.com/jetpack-compose-material3-icon-buttons/#filled
         modifier = Modifier
             .width(50.dp)
@@ -296,7 +335,7 @@ fun SearchBrowserButton(icon: ImageVector, musicEntry: MusicEntry, context: Cont
         onClick = {
             toner.startTone(ToneGenerator.TONE_PROP_BEEP, 500)
             onButtonClicked(!visible)
-            dispatchAction(musicEntry, context)
+            dispatchAction(musicEntry, context, action)
         }
     ) {
         Icon(
@@ -309,11 +348,22 @@ fun SearchBrowserButton(icon: ImageVector, musicEntry: MusicEntry, context: Cont
     }
 }
 
-private fun dispatchAction(musicEntry: MusicEntry, context: Context) {
-    // https://developer.android.com/reference/android/content/Intent#ACTION_WEB_SEARCH
-    val intent = Intent(Intent.ACTION_WEB_SEARCH)
-    intent.putExtra(SearchManager.QUERY, musicEntry.artistName + " " + musicEntry.musicName)
-    context.startActivity(intent)
+private fun dispatchAction(musicEntry: MusicEntry, context: Context, action: String) {
+    when (action) {
+        "Search" -> {
+            // https://developer.android.com/reference/android/content/Intent#ACTION_WEB_SEARCH
+            val intent = Intent(Intent.ACTION_WEB_SEARCH)
+            intent.putExtra(SearchManager.QUERY, musicEntry.artistName + " " + musicEntry.musicName)
+            context.startActivity(intent)
+        }
+        "Map" -> {
+            val uri = Uri.parse("geo:0,0?q=${URLEncoder.encode(musicEntry.whereObtained, "UTF-8")}")
+            val intent = Intent(Intent.ACTION_VIEW, uri)
+            context.startActivity(intent)
+        }
+
+    }
+
 }
 
 @Composable

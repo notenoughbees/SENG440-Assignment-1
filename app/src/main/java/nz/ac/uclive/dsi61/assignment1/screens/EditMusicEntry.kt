@@ -103,6 +103,7 @@ fun EditMusicEntryScreen(context: Context,
     var selectedPhysicalFormat by remember { mutableStateOf(musicEntry.physicalFormat?: dropdownPhysicalFormatItems[dropdownPhysicalFormatItems.size -1]) } // last item is "Other"
     var selectedRecordingFormat by remember { mutableStateOf(musicEntry.recordingFormat?: dropdownRecordingFormatItems[dropdownRecordingFormatItems.size -1]) }
     var selectedDateObtained by remember { mutableStateOf("") }
+    var selectedWhereObtained by remember { mutableStateOf(musicEntry.whereObtained) }
     var selectedPricePaid by remember { mutableStateOf(musicEntry.pricePaid) }
     var selectedNotes by remember { mutableStateOf(musicEntry.notes) }
 
@@ -179,6 +180,7 @@ fun EditMusicEntryScreen(context: Context,
                     selectedArtistName, selectedPhysicalFormat,
                     selectedRecordingFormat, LocalDate.of(year, month, day),
                     selectedPricePaid?: stringResource(R.string.musicEntryValueNotGiven),
+                    selectedWhereObtained?: stringResource(R.string.musicEntryValueNotGiven),
                     selectedNotes ?: context.resources.getString(R.string.musicEntryValueNotGiven),
                     toner
                 )
@@ -330,6 +332,36 @@ fun EditMusicEntryScreen(context: Context,
 //                }
             }
 
+
+            // where obtained
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    TextField(
+                        value = selectedWhereObtained?: stringResource(R.string.musicEntryValueNotGiven),
+                        onValueChange = {
+                            selectedWhereObtained = it
+                        },
+                        label = { Text(text = stringResource(R.string.musicEntryWhereObtained)) },
+                        textStyle = TextStyle(
+                            color = MaterialTheme.colorScheme.secondary,
+                            fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                            fontWeight = MaterialTheme.typography.bodyMedium.fontWeight
+                        ),
+                        colors = TextFieldDefaults.textFieldColors(
+                            containerColor = MaterialTheme.colorScheme.onSurface,
+                            focusedLabelColor = MaterialTheme.colorScheme.primary,
+                            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+                        )
+                    )
+                }
+            }
+
             // price paid
             // TODO: if price paid value is 0, show 0 instead of "-"
             Row(
@@ -456,8 +488,8 @@ fun SaveMusicEntryButton(navController: NavController, icon: ImageVector,
                          context: Context, selectedMusicName: String,
                          selectedArtistName: String, selectedPhysicalFormat: String,
                          selectedRecordingFormat: String, selectedDateObtained: LocalDate,
-                         selectedPricePaid: String, selectedNotes: String,
-                         toner: ToneGenerator) {
+                         selectedWhereObtained: String, selectedPricePaid: String,
+                         selectedNotes: String, toner: ToneGenerator) {
     FilledIconButton( // https://semicolonspace.com/jetpack-compose-material3-icon-buttons/#filled
         modifier = Modifier
             .width(50.dp)
@@ -471,7 +503,7 @@ fun SaveMusicEntryButton(navController: NavController, icon: ImageVector,
 
             saveMusicEntry(musicEntry, context, selectedMusicName,
                 selectedArtistName, selectedPhysicalFormat, selectedRecordingFormat,
-                selectedDateObtained, selectedPricePaid, selectedNotes)
+                selectedDateObtained, selectedWhereObtained, selectedPricePaid, selectedNotes)
             navController.navigate(Screens.ViewMusicEntry.passId(musicEntryId))
             Toast.makeText(context, "Saved music details!", Toast.LENGTH_SHORT).show()
         }
@@ -486,15 +518,17 @@ fun SaveMusicEntryButton(navController: NavController, icon: ImageVector,
     }
 }
 
-fun saveMusicEntry(musicEntry: MusicEntry, context: Context, selectedMusicName: String,
-                   selectedArtistName: String, selectedPhysicalFormat: String,
-                   selectedRecordingFormat: String, selectedDateObtained: LocalDate,
+fun saveMusicEntry(musicEntry: MusicEntry, context: Context,
+                   selectedMusicName: String, selectedArtistName: String,
+                   selectedPhysicalFormat: String, selectedRecordingFormat: String,
+                   selectedDateObtained: LocalDate, selectedWhereObtained: String,
                    selectedPricePaid: String, selectedNotes: String) {
     musicEntry.musicName = selectedMusicName
     musicEntry.artistName = selectedArtistName
     musicEntry.physicalFormat = selectedPhysicalFormat
     musicEntry.recordingFormat = selectedRecordingFormat
     musicEntry.dateObtained = selectedDateObtained
+    musicEntry.whereObtained = selectedWhereObtained
     musicEntry.pricePaid = selectedPricePaid
     musicEntry.notes = selectedNotes
 

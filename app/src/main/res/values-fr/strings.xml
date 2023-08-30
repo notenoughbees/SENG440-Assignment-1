@@ -17,6 +17,7 @@
     <string name="musicEntryFormatPhysical">Format physique</string>
     <string name="musicEntryFormatRecording">Format d\'enregistrement</string>
     <string name="musicEntryDateObtained">Date d\'obtention</string>
+    <string name="musicEntryWhereObtained">Où d\'obtenu</string>
     <string name="musicEntryPricePaid">Payé</string>
     <string name="musicEntryExtraNotes">Notes</string>
     <string name="other">Autre</string>
