@@ -168,10 +168,10 @@ fun EditMusicEntryScreen(context: Context,
                 var month = calendar[Calendar.MONTH]
                 var day = calendar[Calendar.DAY_OF_MONTH]
                 if (selectedDateObtained != "") {
-                    val selectedDateObtainedParts: List<String> = selectedDateObtained.split("/")
-                    day = selectedDateObtainedParts[0].toInt()
+                    val selectedDateObtainedParts: List<String> = selectedDateObtained.split("-")
+                    year = selectedDateObtainedParts[0].toInt()
                     month = selectedDateObtainedParts[1].toInt()
-                    year = selectedDateObtainedParts[2].toInt()
+                    day = selectedDateObtainedParts[2].toInt()
                 }
                 SaveMusicEntryButton(
                     navController, Icons.Filled.Done,
@@ -179,8 +179,8 @@ fun EditMusicEntryScreen(context: Context,
                     context, selectedMusicName,
                     selectedArtistName, selectedPhysicalFormat,
                     selectedRecordingFormat, LocalDate.of(year, month, day),
-                    selectedPricePaid?: stringResource(R.string.musicEntryValueNotGiven),
                     selectedWhereObtained?: stringResource(R.string.musicEntryValueNotGiven),
+                    selectedPricePaid?: stringResource(R.string.musicEntryValueNotGiven),
                     selectedNotes ?: context.resources.getString(R.string.musicEntryValueNotGiven),
                     toner
                 )
@@ -273,8 +273,7 @@ fun EditMusicEntryScreen(context: Context,
                 val datePicker = DatePickerDialog(
                     context,
                     { _: DatePicker, selectedYear: Int, selectedMonth: Int, selectedDay: Int ->
-                        //TODO: fix date format switching between D/M/Y & Y-M-D
-                        selectedDateObtained = "$selectedDay/${selectedMonth + 1}/$selectedYear"
+                        selectedDateObtained = "$selectedYear-${selectedMonth + 1}-$selectedDay"
                     }, year, month, day
                 )
 

@@ -60,8 +60,7 @@ fun MyCollectionScreen(navController: NavController) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MusicList(musics: MutableList<MusicEntry>, onMusicEntryClick: (MusicEntry) -> Unit) {
-    //TODO: case-insenstive sorting
-    musics.sort() // https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/sort.html
+    val musicsSorted = musics.sortedBy { it.musicName.lowercase() } // case-insensitive sorting
     LazyColumn (
         // in material 3, the top bar overlaps the content by default,
         // so we must add top padding to the content to push it down
@@ -71,11 +70,11 @@ fun MusicList(musics: MutableList<MusicEntry>, onMusicEntryClick: (MusicEntry) -
             .fillMaxSize() // makes list scrollable in landscape mode
             .padding(top = TOP_APP_BAR_HEIGHT)
     ) {
-        items(musics) { music ->
+        items(musicsSorted) { music ->
             // Styling for an individual item in the list
             Box(
                 modifier = Modifier
-                    .padding(all = 40.dp)
+                    .padding(all = 36.dp)
                     .clickable {
                         onMusicEntryClick(music)
                     },

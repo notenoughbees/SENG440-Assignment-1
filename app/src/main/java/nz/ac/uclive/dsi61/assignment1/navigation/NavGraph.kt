@@ -29,7 +29,7 @@ fun NavGraph (navController: NavHostController) {
             arguments = listOf(navArgument("id") {
                 type = NavType.IntType
             })
-        ) { backStackEntry ->
+        ) { backStackEntry -> //TODO: make going back behave differently: don't want back and forth between View & Edit
             // https://developer.android.com/jetpack/compose/navigation#nav-with-args
             val musicEntryId = backStackEntry.arguments?.getInt("id") ?: -1
             ViewMusicEntryScreen(LocalContext.current, navController, musicEntryId)

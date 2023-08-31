@@ -184,6 +184,7 @@ fun ViewMusicEntryScreen(context: Context,
                         musicEntry,
                         context,
                         buttonVisible,
+                        true,
                         toner,
                         "Search"
                     ) {
@@ -275,7 +276,8 @@ fun ViewMusicEntryScreen(context: Context,
                             icon = Icons.Filled.LocationOn,
                             musicEntry,
                             context,
-                            buttonVisible,
+                            buttonVisible, //TODO: buttonVisible: when click this button, the other button animates
+                            musicEntry.whereObtained != null, // disable button if no location given
                             toner,
                             "Map"
                         ) {
@@ -322,13 +324,14 @@ fun ViewMusicEntryScreen(context: Context,
 
 @Composable
 fun PrimaryButton(icon: ImageVector, musicEntry: MusicEntry, context: Context,
-                        visible: Boolean, toner: ToneGenerator, action: String,
+                        visible: Boolean, enabled: Boolean, toner: ToneGenerator, action: String,
                         onButtonClicked: (Boolean) -> Unit) {
     FilledIconButton( // https://semicolonspace.com/jetpack-compose-material3-icon-buttons/#filled
         modifier = Modifier
             .width(50.dp)
             .height(50.dp)
             .aspectRatio(1f), // 1:1 aspect ratio: square button
+        enabled = enabled,
         colors = IconButtonDefaults.iconButtonColors(
             containerColor = MaterialTheme.colorScheme.tertiary
         ),
@@ -361,7 +364,6 @@ private fun dispatchAction(musicEntry: MusicEntry, context: Context, action: Str
             val intent = Intent(Intent.ACTION_VIEW, uri)
             context.startActivity(intent)
         }
-
     }
 
 }
