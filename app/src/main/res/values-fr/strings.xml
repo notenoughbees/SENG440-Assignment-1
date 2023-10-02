@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Recortext</string>
     <string name="file">music.json</string>
+    <string name="myCollection">Ma Collection</string>
     <string name="formatPhysicalCD">CD</string>
     <string name="formatPhysicalCassette">Cassette</string>
     <string name="formatPhysicalDigital">Numérique</string>

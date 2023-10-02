@@ -16,15 +16,14 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import nz.ac.uclive.dsi61.assignment1.MusicEntry
-import nz.ac.uclive.dsi61.assignment1.navigation.Screens
 import nz.ac.uclive.dsi61.assignment1.Constants.TOP_APP_BAR_HEIGHT
+import nz.ac.uclive.dsi61.assignment1.MusicEntry
+import nz.ac.uclive.dsi61.assignment1.R
+import nz.ac.uclive.dsi61.assignment1.navigation.Screens
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,7 +36,7 @@ fun MyCollectionScreen(navController: NavController) {
         topBar = {
             TopAppBar(
                 title = {
-                    Text("My Collection")
+                    Text(stringResource(R.string.myCollection))
                 },
                 colors = TopAppBarDefaults.largeTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.surface
